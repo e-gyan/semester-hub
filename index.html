@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Semester Hub</title>
+
+<!-- Chart.js (external) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<!-- Styles -->
+<link rel="stylesheet" href="styles/base.css" />
+<link rel="stylesheet" href="styles/layout.css" />
+<link rel="stylesheet" href="styles/components.css" />
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">SH</div>
+      <div>
+        <div class="brand-title" id="brand-name">Semester Hub</div>
+        <div class="brand-sub" id="brand-sub">Your studio</div>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <a class="nav-item active" data-view="dashboard"><svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</a>
+      <a class="nav-item" data-view="courses"><svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Courses</a>
+      <a class="nav-item" data-view="weekly"><svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Weekly Planner</a>
+      <a class="nav-item" data-view="professional"><svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Professional</a>
+      <a class="nav-item" data-view="personal"><svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Personal</a>
+      <a class="nav-item" data-view="analytics"><svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Analytics</a>
+      <a class="nav-item" data-view="settings"><svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="theme-toggle">
+        <span>Dark mode</span>
+        <div class="switch" id="theme-switch"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+    <div class="topbar">
+      <div class="greeting">
+        <h1 id="hello">Hello.</h1>
+        <p id="greeting-sub">Let's make this semester yours.</p>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <div class="sync-pill" id="sync-pill" title="Click to open sync settings">
+          <span class="sync-dot idle" id="sync-dot"></span>
+          <span id="sync-label">Local only</span>
+        </div>
+        <div class="week-pill">
+          <div>
+            <div class="label">Week</div>
+            <div class="val"><span id="week-current">3</span> / <span id="week-total">13</span></div>
+          </div>
+          <div class="week-track"><div id="week-bar" style="width: 23%"></div></div>
+          <div class="week-stepper">
+            <button id="week-down" title="Previous week">−</button>
+            <button id="week-up" title="Next week">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==== Dashboard view ==== -->
+    <section id="view-dashboard">
+      <div id="welcome-card" class="welcome hidden">
+        <h2>Welcome to your semester.</h2>
+        <p>Add a course or two and start tracking what matters. Nothing is pre-filled — this is your space to shape.</p>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="openModal('course')">Add your first course</button>
+          <button class="btn" onclick="setView('settings')">Name this semester</button>
+        </div>
+      </div>
+
+      <div class="grid stat-grid" style="margin-bottom: 16px;">
+        <div class="stat"><div class="accent" style="background: var(--primary)"></div>
+          <div class="lbl">Courses</div><div class="num" id="stat-courses">0</div><div class="sub" id="stat-courses-sub">Add your first one</div>
+        </div>
+        <div class="stat"><div class="accent" style="background: var(--accent)"></div>
+          <div class="lbl">Due this week</div><div class="num" id="stat-due">0</div><div class="sub">Across all courses</div>
+        </div>
+        <div class="stat"><div class="accent" style="background: var(--success)"></div>
+          <div class="lbl">Hours this week</div><div class="num" id="stat-hours">0</div><div class="sub">Logged study time</div>
+        </div>
+        <div class="stat"><div class="accent" style="background: var(--warn)"></div>
+          <div class="lbl">Projected GPA</div><div class="num" id="stat-gpa">—</div><div class="sub">From your inputs</div>
+        </div>
+      </div>
+
+      <div class="panel-row" style="margin-bottom: 16px;">
+        <div class="panel">
+          <h2>Upcoming deadlines
+            <span class="actions">
+              <button class="btn btn-sm" onclick="openModal('assignment')">+ Add</button>
+            </span>
+          </h2>
+          <div id="upcoming-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Today's focus
+            <span class="actions">
+              <button class="btn btn-sm" onclick="openModal('focus')">+ Add</button>
+            </span>
+          </h2>
+          <div id="focus-list"></div>
+        </div>
+      </div>
+
+      <div class="panel-row" style="margin-bottom: 16px;">
+        <div class="panel">
+          <h2>Semester at a glance
+            <span class="actions"><span class="legend">
+              <span class="legend-sq" style="background: var(--panel-2); border: 1px solid var(--line);"></span>0
+              <span class="legend-sq" style="background: rgba(109,93,252,.20)"></span>light
+              <span class="legend-sq" style="background: rgba(255,122,89,.6)"></span>busy
+              <span class="legend-sq" style="background: rgba(239,69,101,.8)"></span>crunch
+            </span></span>
+          </h2>
+          <div class="heatmap" id="mini-heatmap"></div>
+          <p style="font-size: 11px; color: var(--muted); margin: 10px 0 0;">Each square is one week. Click a week to plan it.</p>
+        </div>
+        <div class="panel">
+          <h2>Course progress</h2>
+          <div id="progress-list"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Quick capture
+          <span class="actions"><span style="font-size: 11px; color: var(--muted);">Press Enter to save</span></span>
+        </h2>
+        <div class="quick-bar">
+          <input id="quick-input" placeholder="Note an idea, a task, anything..." />
+          <select id="quick-target" style="background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; font-size: 13px;">
+            <option value="focus">Today's focus</option>
+            <option value="weekly">This week</option>
+            <option value="goal-personal">Personal goal</option>
+            <option value="goal-professional">Professional goal</option>
+          </select>
+          <button class="btn btn-primary" id="quick-add">Save</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==== Courses view ==== -->
+    <section id="view-courses" class="hidden">
+      <div class="section-head">
+        <div><h1>Courses</h1><p>Track assignments, grades, readings — one tile per course.</p></div>
+        <button class="btn btn-primary" onclick="openModal('course')">+ Add course</button>
+      </div>
+      <div class="grid course-grid" id="courses-grid"></div>
+    </section>
+
+    <section id="view-course-detail" class="hidden">
+      <button class="btn btn-ghost" onclick="setView('courses')" style="margin-bottom: 12px;">← Back to courses</button>
+      <div id="course-detail-body"></div>
+    </section>
+
+    <!-- ==== Weekly planner ==== -->
+    <section id="view-weekly" class="hidden">
+      <div class="section-head">
+        <div><h1>Weekly planner</h1><p>13 weeks. Click any week to plan, reflect, or log.</p></div>
+        <button class="btn" onclick="setView('dashboard')">Back to dashboard</button>
+      </div>
+      <div class="weeks-grid" id="weeks-grid"></div>
+    </section>
+
+    <section id="view-week-detail" class="hidden">
+      <button class="btn btn-ghost" onclick="setView('weekly')" style="margin-bottom: 12px;">← Back to all weeks</button>
+      <div id="week-detail-body"></div>
+    </section>
+
+    <!-- ==== Professional ==== -->
+    <section id="view-professional" class="hidden">
+      <div class="section-head">
+        <div><h1>Professional</h1><p>Applications, networking, skill-building — all in motion.</p></div>
+      </div>
+      <div class="pill-tabs" id="pro-tabs">
+        <div class="pill-tab active" data-pro="apps">Applications</div>
+        <div class="pill-tab" data-pro="contacts">Contacts</div>
+        <div class="pill-tab" data-pro="skills">Skills</div>
+        <div class="pill-tab" data-pro="projects">Projects</div>
+      </div>
+      <div id="pro-content"></div>
+    </section>
+
+    <!-- ==== Personal ==== -->
+    <section id="view-personal" class="hidden">
+      <div class="section-head">
+        <div><h1>Personal</h1><p>Habits, money, goals, wellness — your foundation.</p></div>
+      </div>
+      <div class="pill-tabs" id="pers-tabs">
+        <div class="pill-tab active" data-pers="habits">Habits</div>
+        <div class="pill-tab" data-pers="budget">Budget</div>
+        <div class="pill-tab" data-pers="goals">Goals</div>
+        <div class="pill-tab" data-pers="wellness">Wellness</div>
+      </div>
+      <div id="pers-content"></div>
+    </section>
+
+    <!-- ==== Analytics ==== -->
+    <section id="view-analytics" class="hidden">
+      <div class="section-head">
+        <div><h1>Analytics</h1><p>The patterns behind your semester.</p></div>
+      </div>
+
+      <div class="panel-row" style="margin-bottom: 16px;">
+        <div class="panel">
+          <h2>Where your hours go
+            <span class="actions"><button class="btn btn-sm" onclick="openModal('time-log')">+ Log hours</button></span>
+          </h2>
+          <div class="chart-wrap"><canvas id="chart-time"></canvas></div>
+        </div>
+        <div class="panel">
+          <h2>GPA projector</h2>
+          <div class="gpa-display">
+            <div class="gpa-number" id="gpa-big">—</div>
+            <div class="gpa-label">Weighted by credits, based on current grade entries</div>
+          </div>
+          <div id="gpa-breakdown" style="margin-top: 14px;"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom: 16px;">
+        <h2>Deadline heatmap
+          <span class="actions"><span class="legend">
+            <span class="legend-sq" style="background: var(--panel-2); border: 1px solid var(--line);"></span>0
+            <span class="legend-sq" style="background: rgba(109,93,252,.20)"></span>1
+            <span class="legend-sq" style="background: rgba(109,93,252,.45)"></span>2
+            <span class="legend-sq" style="background: rgba(255,122,89,.6)"></span>3
+            <span class="legend-sq" style="background: rgba(239,69,101,.8)"></span>4+
+          </span></span>
+        </h2>
+        <div class="heatmap" id="full-heatmap"></div>
+      </div>
+
+      <div class="panel-row">
+        <div class="panel">
+          <h2>Completion by area</h2>
+          <div id="progress-areas"></div>
+        </div>
+        <div class="panel">
+          <h2>Weekly time trend</h2>
+          <div class="chart-wrap"><canvas id="chart-weekly-time"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==== Settings ==== -->
+    <section id="view-settings" class="hidden">
+      <div class="section-head">
+        <div><h1>Settings</h1><p>Make it yours.</p></div>
+      </div>
+      <div class="panel" style="margin-bottom: 16px; max-width: 560px;">
+        <h2>Semester details</h2>
+        <div class="field" style="margin-bottom: 12px;">
+          <label>Semester name</label>
+          <input id="set-name" placeholder="e.g. Spring 2026 — IT for Business" />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Start date (week 1)</label>
+            <input id="set-start" type="date" />
+          </div>
+          <div class="field">
+            <label>Total weeks</label>
+            <input id="set-weeks" type="number" min="1" max="20" />
+          </div>
+        </div>
+        <div class="field" style="margin-top: 12px;">
+          <label>Your name</label>
+          <input id="set-user" placeholder="Goes in the greeting" />
+        </div>
+        <div style="margin-top: 14px;">
+          <button class="btn btn-primary" id="set-save">Save</button>
+        </div>
+      </div>
+
+      <div class="panel" style="max-width: 560px; margin-bottom: 16px;">
+        <h2>Cloud sync — JSONBin.io</h2>
+        <div id="sync-not-configured">
+          <p style="font-size: 13px; color: var(--ink-soft); margin: 0 0 14px;">
+            Not connected. Set up a PIN-protected connection to sync across devices.
+            Your Master Key gets encrypted with <strong>AES-256-GCM</strong> using a key derived from your PIN via PBKDF2.
+            Free JSONBin account at <a href="https://jsonbin.io/login" target="_blank" rel="noopener">jsonbin.io</a>.
+          </p>
+          <button class="btn btn-primary" id="open-setup">Set up cloud sync</button>
+        </div>
+        <div id="sync-configured" class="hidden">
+          <div id="sync-info" class="sync-info-card"></div>
+          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn" id="sync-now">Sync now</button>
+            <button class="btn" id="sync-pull">Pull from cloud</button>
+            <button class="btn" id="change-creds">Change credentials</button>
+            <button class="btn" id="change-pin">Change PIN</button>
+            <button class="btn" style="color: var(--danger);" id="sync-disconnect">Disconnect</button>
+          </div>
+          <div style="margin-top: 14px; font-size: 12px; color: var(--muted);">
+            <strong style="color: var(--ink-soft);">Security:</strong> Credentials encrypted at rest. PIN required to make any changes here.
+            On a fresh browser tab you'll be asked to unlock with your PIN.
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="max-width: 560px;">
+        <h2>Your data</h2>
+        <p style="font-size: 13px; color: var(--ink-soft); margin: 0 0 12px;">Everything is stored in your browser. Export occasionally as a backup.</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn" id="export-data">Export JSON</button>
+          <button class="btn" id="import-data">Import JSON</button>
+          <input type="file" id="import-file" accept=".json" class="hidden" />
+          <button class="btn" style="color: var(--danger);" id="reset-data">Reset everything</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Lock screen -->
+<div class="lock-overlay hidden" id="lock-overlay">
+  <div class="lock-card">
+    <div class="lock-logo">🔒</div>
+    <h2>Semester Hub</h2>
+    <p class="sub">Enter your PIN to unlock cloud sync.</p>
+    <input type="password" id="lock-pin" inputmode="numeric" autocomplete="off" placeholder="PIN" autofocus />
+    <div class="lock-error" id="lock-error"></div>
+    <div class="lock-actions">
+      <button class="btn btn-primary" id="lock-submit">Unlock</button>
+      <button class="text-link" id="lock-skip">Continue without cloud (local only)</button>
+      <button class="text-link danger" id="lock-reset">Forgot PIN — reset local data</button>
+    </div>
+    <div class="security-badge">AES-256-GCM • PBKDF2 150k</div>
+  </div>
+</div>
+
+<!-- Setup wizard -->
+<div class="lock-overlay hidden" id="setup-overlay">
+  <div class="lock-card lock-card-wide">
+    <div class="lock-logo">🛡️</div>
+    <h2>Secure cloud sync</h2>
+    <p class="sub">Connect to JSONBin.io and protect your credentials with a PIN. They'll be encrypted on this device with a key only your PIN can derive.</p>
+
+    <div class="lock-section">
+      <h4>1 · Create a PIN</h4>
+      <input type="password" id="setup-pin" inputmode="numeric" autocomplete="new-password" placeholder="At least 4 characters" />
+      <input type="password" id="setup-pin-confirm" inputmode="numeric" autocomplete="new-password" placeholder="Confirm PIN" />
+    </div>
+
+    <div class="lock-section">
+      <h4>2 · JSONBin credentials</h4>
+      <input type="password" id="setup-key" autocomplete="off" placeholder="Master Key (X-Master-Key)" />
+      <input id="setup-bin" autocomplete="off" placeholder="Bin ID (leave empty to create a new one)" />
+    </div>
+
+    <div class="lock-error" id="setup-error"></div>
+    <div class="lock-actions">
+      <button class="btn btn-primary" id="setup-submit">Set up & connect</button>
+      <button class="text-link" id="setup-cancel">Cancel</button>
+    </div>
+    <div class="security-badge">Encryption happens locally — your PIN never leaves this device</div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
+<!-- Scripts — order matters; each later script may depend on earlier ones -->
+<script src="scripts/helpers.js"></script>
+<script src="scripts/state.js"></script>
+<script src="scripts/security.js"></script>
+<script src="scripts/modals.js"></script>
+<script src="scripts/views.js"></script>
+<script src="scripts/app.js"></script>
+</body>
+</html>

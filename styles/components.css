@@ -439,3 +439,164 @@ tr:hover td { background: var(--panel-2); }
   padding: 3px 8px; border-radius: 6px; font-size: 11px;
   cursor: pointer;
 }
+
+/* ============================================================
+   Responsive — component-level mobile overrides
+   ============================================================ */
+
+@media (max-width: 760px) {
+  .panel { padding: 14px 16px; }
+  .panel h2 { font-size: 15px; }
+  .stat { padding: 14px 16px; }
+  .stat .num { font-size: 22px; }
+  .course-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .weeks-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+  .heatmap { grid-template-columns: repeat(7, 1fr); }
+
+  /* Course detail head — stack vertically */
+  .course-detail-head { flex-wrap: wrap; gap: 12px; }
+  .course-detail-head > div:nth-child(2) { flex: 1 0 60%; }
+  .course-detail-head > div:nth-child(3) { text-align: left; }
+  .course-detail-head > div:nth-child(4) { flex: 1 0 100%; }
+
+  /* Pill tabs scrollable */
+  .pill-tabs {
+    display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap; max-width: 100%;
+  }
+  .pill-tabs::-webkit-scrollbar { height: 0; }
+  .pill-tab { flex: none; white-space: nowrap; }
+
+  /* Buttons — bigger tap targets */
+  .btn { padding: 10px 14px; }
+  .btn-sm { padding: 7px 11px; font-size: 12px; }
+  .btn-icon { width: 34px; height: 34px; }
+
+  /* Tables — compact */
+  th, td { padding: 8px 8px; font-size: 12px; }
+  th { font-size: 10px; }
+
+  /* GPA */
+  .gpa-number { font-size: 44px; }
+  .gpa-display { padding: 18px; }
+
+  /* Welcome */
+  .welcome { padding: 28px 18px; }
+  .welcome h2 { font-size: 22px; }
+
+  /* Quick capture bar — stack */
+  .quick-bar { flex-direction: column; }
+  .quick-bar input { min-width: 0; width: 100%; }
+  .quick-bar select { width: 100%; }
+  .quick-bar .btn { width: 100%; }
+
+  /* Modal — fit better */
+  .modal-head { padding: 16px 18px 4px; }
+  .modal-body { padding: 14px 18px; }
+  .modal-foot { padding: 12px 18px 18px; }
+  .field-row { grid-template-columns: 1fr; }
+
+  /* Lock card */
+  .lock-card { padding: 26px 22px; }
+  .lock-card h2 { font-size: 20px; }
+}
+
+@media (max-width: 480px) {
+  .panel { padding: 12px 14px; }
+  .panel h2 { font-size: 14px; flex-wrap: wrap; }
+  .panel h2 .actions { width: 100%; justify-content: flex-end; }
+
+  .stat { padding: 12px 14px; }
+  .stat .num { font-size: 20px; }
+  .stat .lbl { font-size: 10px; }
+  .stat .sub { font-size: 11px; }
+
+  /* Course grid: single column */
+  .course-grid { grid-template-columns: 1fr; }
+  .course-card { padding: 14px; }
+  .course-card .name { font-size: 15px; }
+
+  /* Weeks grid: smaller cards */
+  .weeks-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .week-card { padding: 10px; min-height: 110px; }
+  .week-card .wk-num { width: 26px; height: 26px; font-size: 12px; }
+  .week-card .wk-date { font-size: 10px; }
+  .week-card .wk-summary { font-size: 11px; }
+
+  /* Heatmap — tighter */
+  .heatmap { gap: 4px; }
+  .heatmap-cell { font-size: 9px; }
+
+  /* Habits — shrink check cells */
+  .habit-grid { grid-template-columns: 1fr repeat(7, 26px); gap: 4px; }
+  .habit-check { width: 22px; height: 22px; font-size: 12px; }
+  .habit-grid .hd { font-size: 10px; }
+  .habit-name { font-size: 12px; }
+
+  /* Budget — stack */
+  .budget-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px; padding: 10px; background: var(--panel-2); border-radius: 10px;
+  }
+  .budget-row > *:nth-child(1) { grid-column: 1 / -1; }
+  .budget-row > *:nth-child(4) { grid-column: 1 / -1; }
+
+  /* GPA */
+  .gpa-number { font-size: 38px; }
+  .gpa-display { padding: 14px; }
+
+  /* Welcome */
+  .welcome { padding: 22px 14px; margin-bottom: 14px; }
+  .welcome h2 { font-size: 19px; }
+  .welcome p { font-size: 13px; }
+  .welcome .actions { flex-direction: column; }
+  .welcome .actions .btn { width: 100%; }
+
+  /* Modal */
+  .modal { border-radius: 14px; }
+  .modal-head { padding: 14px 16px 4px; }
+  .modal-head h3 { font-size: 16px; }
+  .modal-body { padding: 12px 16px; gap: 10px; }
+  .modal-foot { padding: 10px 16px 16px; }
+
+  /* Lock card */
+  .lock-card { padding: 22px 18px; }
+  .lock-card h2 { font-size: 18px; }
+  .lock-card .sub { font-size: 12px; margin-bottom: 14px; }
+  .lock-section { margin-top: 14px; }
+  .lock-card input { padding: 10px 12px; font-size: 13px; }
+  .lock-logo { width: 48px; height: 48px; font-size: 22px; }
+
+  /* Tables */
+  th, td { padding: 7px 6px; font-size: 11px; }
+
+  /* Toast — full-width-ish */
+  .toast-wrap { left: 12px; right: 12px; bottom: 12px; }
+  .toast { max-width: none; }
+
+  /* Note card */
+  .note-card { padding: 12px 14px; }
+  .note-head { flex-wrap: wrap; gap: 8px; }
+  .note-meta-inputs { flex-wrap: wrap; }
+
+  /* RTE */
+  .rte-toolbar { padding: 4px 6px; }
+  .rte-btn { min-width: 26px; height: 26px; padding: 0 4px; }
+  .rte-editor { padding: 10px 12px; font-size: 13px; }
+
+  /* Tags slightly smaller */
+  .tag { font-size: 10px; padding: 3px 8px; }
+
+  /* Compact list — wrap */
+  .compact-item { flex-wrap: wrap; padding: 10px; }
+  .compact-item .grow { flex: 1 1 100%; order: 2; }
+
+  /* Section head wraps inline */
+  .section-head { gap: 8px; }
+  .section-head > div:first-child { flex: 1; }
+
+  /* Course detail head */
+  .course-detail-head { gap: 10px; }
+  .course-detail-head h1 { font-size: 18px !important; }
+  .course-color-square { width: 40px; height: 40px; font-size: 15px; border-radius: 10px; }
+}

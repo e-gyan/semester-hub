@@ -405,19 +405,142 @@
   .welcome p { color: var(--ink-soft); margin: 0 auto; max-width: 580px; font-size: 14px; }
   .welcome .actions { margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
-  /* Responsive */
+  /* ===== Responsive ===== */
+  /* Tablet / smaller laptop */
   @media (max-width: 1000px) {
     .stat-grid { grid-template-columns: repeat(2, 1fr); }
     .panel-row, .panel-row-3 { grid-template-columns: 1fr; }
+    .main { padding: 20px 24px 60px; }
   }
+  /* Mobile / portrait tablet */
   @media (max-width: 760px) {
     .app { grid-template-columns: 1fr; }
-    .sidebar { position: relative; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px; }
+    .sidebar {
+      position: sticky; top: 0; z-index: 50;
+      height: auto; padding: 10px 12px; gap: 10px;
+      flex-direction: row; flex-wrap: wrap; align-items: center;
+    }
+    .brand { padding: 0; }
+    .brand-title { font-size: 14px; }
+    .brand-sub { display: none; }
+    .nav { flex-direction: row; flex-wrap: wrap; gap: 4px; flex: 1; justify-content: flex-end; }
+    .nav-item { padding: 7px 9px; font-size: 12px; }
+    .nav-ico { width: 14px; height: 14px; }
     .sidebar-foot { margin: 0; flex-direction: row; }
-    .nav { flex-direction: row; flex-wrap: wrap; gap: 4px; }
-    .nav-item { padding: 7px 10px; font-size: 12px; }
-    .main { padding: 16px; }
+    .theme-toggle { padding: 6px 10px; font-size: 11px; gap: 8px; }
+    .main { padding: 14px 14px 60px; }
+    .topbar { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 16px; }
+    .greeting h1 { font-size: 19px; }
+    .greeting p { font-size: 12px; }
+    .week-pill { padding: 7px 12px; gap: 10px; }
+    .week-track { width: 110px; }
+    .section-head { flex-direction: column; align-items: stretch; gap: 8px; }
+    .section-head h1 { font-size: 19px; }
+    .panel { padding: 14px 16px; }
+    .panel h2 { font-size: 15px; }
+    .stat { padding: 14px 16px; }
+    .stat .num { font-size: 22px; }
+    .course-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    .weeks-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
     .heatmap { grid-template-columns: repeat(7, 1fr); }
+    .course-detail-head { flex-wrap: wrap; gap: 12px; }
+    .course-detail-head > div:nth-child(2) { flex: 1 0 60%; }
+    .course-detail-head > div:nth-child(3) { text-align: left; }
+    .course-detail-head > div:nth-child(4) { flex: 1 0 100%; }
+    .pill-tabs { display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; max-width: 100%; }
+    .pill-tabs::-webkit-scrollbar { height: 0; }
+    .pill-tab { flex: none; white-space: nowrap; }
+    .btn { padding: 10px 14px; }
+    .btn-sm { padding: 7px 11px; font-size: 12px; }
+    .btn-icon { width: 34px; height: 34px; }
+    th, td { padding: 8px 8px; font-size: 12px; }
+    th { font-size: 10px; }
+    .gpa-number { font-size: 44px; }
+    .gpa-display { padding: 18px; }
+    .welcome { padding: 28px 18px; }
+    .welcome h2 { font-size: 22px; }
+    .quick-bar { flex-direction: column; }
+    .quick-bar input { min-width: 0; width: 100%; }
+    .quick-bar select { width: 100%; }
+    .quick-bar .btn { width: 100%; }
+    .modal-head { padding: 16px 18px 4px; }
+    .modal-body { padding: 14px 18px; }
+    .modal-foot { padding: 12px 18px 18px; }
+    .field-row { grid-template-columns: 1fr; }
+    .lock-card { padding: 26px 22px; }
+    .lock-card h2 { font-size: 20px; }
+  }
+  /* Small phone */
+  @media (max-width: 480px) {
+    .main { padding: 12px; }
+    .sidebar { padding: 8px 10px; gap: 6px; }
+    .nav-item { padding: 6px 8px; font-size: 11px; gap: 6px; }
+    .greeting h1 { font-size: 17px; }
+    .week-pill { padding: 6px 10px; gap: 8px; }
+    .week-track { width: 70px; height: 5px; }
+    .week-pill .label { font-size: 10px; }
+    .week-pill .val { font-size: 12px; }
+    .week-stepper button { width: 22px; height: 22px; }
+    .sync-pill { padding: 5px 9px; font-size: 11px; }
+    .stat-grid { grid-template-columns: 1fr; }
+    .section-head h1 { font-size: 17px; }
+    .section-head p { font-size: 11px; }
+    .panel { padding: 12px 14px; }
+    .panel h2 { font-size: 14px; flex-wrap: wrap; }
+    .panel h2 .actions { width: 100%; justify-content: flex-end; }
+    .stat { padding: 12px 14px; }
+    .stat .num { font-size: 20px; }
+    .stat .lbl { font-size: 10px; }
+    .stat .sub { font-size: 11px; }
+    .course-grid { grid-template-columns: 1fr; }
+    .course-card { padding: 14px; }
+    .course-card .name { font-size: 15px; }
+    .weeks-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+    .week-card { padding: 10px; min-height: 110px; }
+    .week-card .wk-num { width: 26px; height: 26px; font-size: 12px; }
+    .week-card .wk-date { font-size: 10px; }
+    .week-card .wk-summary { font-size: 11px; }
+    .heatmap { gap: 4px; }
+    .heatmap-cell { font-size: 9px; }
+    .habit-grid { grid-template-columns: 1fr repeat(7, 26px); gap: 4px; }
+    .habit-check { width: 22px; height: 22px; font-size: 12px; }
+    .habit-grid .hd { font-size: 10px; }
+    .habit-name { font-size: 12px; }
+    .budget-row { grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; background: var(--panel-2); border-radius: 10px; }
+    .budget-row > *:nth-child(1) { grid-column: 1 / -1; }
+    .budget-row > *:nth-child(4) { grid-column: 1 / -1; }
+    .gpa-number { font-size: 38px; }
+    .gpa-display { padding: 14px; }
+    .welcome { padding: 22px 14px; margin-bottom: 14px; }
+    .welcome h2 { font-size: 19px; }
+    .welcome p { font-size: 13px; }
+    .welcome .actions { flex-direction: column; }
+    .welcome .actions .btn { width: 100%; }
+    .modal { border-radius: 14px; }
+    .modal-head { padding: 14px 16px 4px; }
+    .modal-head h3 { font-size: 16px; }
+    .modal-body { padding: 12px 16px; gap: 10px; }
+    .modal-foot { padding: 10px 16px 16px; }
+    .lock-card { padding: 22px 18px; }
+    .lock-card h2 { font-size: 18px; }
+    .lock-card .sub { font-size: 12px; margin-bottom: 14px; }
+    .lock-section { margin-top: 14px; }
+    .lock-card input { padding: 10px 12px; font-size: 13px; }
+    .lock-logo { width: 48px; height: 48px; font-size: 22px; }
+    th, td { padding: 7px 6px; font-size: 11px; }
+    .toast-wrap { left: 12px; right: 12px; bottom: 12px; }
+    .toast { max-width: none; }
+    .note-card { padding: 12px 14px; }
+    .note-head { flex-wrap: wrap; gap: 8px; }
+    .note-meta-inputs { flex-wrap: wrap; }
+    .rte-toolbar { padding: 4px 6px; }
+    .rte-btn { min-width: 26px; height: 26px; padding: 0 4px; }
+    .rte-editor { padding: 10px 12px; font-size: 13px; }
+    .tag { font-size: 10px; padding: 3px 8px; }
+    .compact-item { flex-wrap: wrap; padding: 10px; }
+    .compact-item .grow { flex: 1 1 100%; order: 2; }
+    .course-detail-head { gap: 10px; }
+    .course-color-square { width: 40px; height: 40px; font-size: 15px; border-radius: 10px; }
   }
 
   /* Sortable cursor */

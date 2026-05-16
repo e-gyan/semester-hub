@@ -68,17 +68,71 @@
 .section-head h1 { margin: 0; font-size: 22px; letter-spacing: -.02em; }
 .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
 
-/* Responsive */
+/* ===== Responsive ===== */
+
+/* Tablet / smaller laptop */
 @media (max-width: 1000px) {
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .panel-row, .panel-row-3 { grid-template-columns: 1fr; }
+  .main { padding: 20px 24px 60px; }
 }
+
+/* Mobile / portrait tablet */
 @media (max-width: 760px) {
+  /* Sidebar becomes horizontal top bar */
   .app { grid-template-columns: 1fr; }
-  .sidebar { position: relative; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px; }
+  .sidebar {
+    position: sticky; top: 0; z-index: 50;
+    height: auto; padding: 10px 12px; gap: 10px;
+    flex-direction: row; flex-wrap: wrap; align-items: center;
+  }
+  .brand { padding: 0; }
+  .brand-title { font-size: 14px; }
+  .brand-sub { display: none; }
+  .nav { flex-direction: row; flex-wrap: wrap; gap: 4px; flex: 1; justify-content: flex-end; }
+  .nav-item { padding: 7px 9px; font-size: 12px; }
+  .nav-ico { width: 14px; height: 14px; }
   .sidebar-foot { margin: 0; flex-direction: row; }
-  .nav { flex-direction: row; flex-wrap: wrap; gap: 4px; }
-  .nav-item { padding: 7px 10px; font-size: 12px; }
-  .main { padding: 16px; }
-  .heatmap { grid-template-columns: repeat(7, 1fr); }
+  .theme-toggle { padding: 6px 10px; font-size: 11px; gap: 8px; }
+
+  /* Main padding */
+  .main { padding: 14px 14px 60px; }
+
+  /* Topbar — stack greeting and pills */
+  .topbar { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 16px; }
+  .greeting h1 { font-size: 19px; }
+  .greeting p { font-size: 12px; }
+
+  /* Pills row right-aligned */
+  .week-pill { padding: 7px 12px; gap: 10px; }
+  .week-track { width: 110px; }
+
+  /* Section head */
+  .section-head { flex-direction: column; align-items: stretch; gap: 8px; }
+  .section-head h1 { font-size: 19px; }
+}
+
+/* Small phone */
+@media (max-width: 480px) {
+  /* Layout */
+  .main { padding: 12px; }
+  .sidebar { padding: 8px 10px; gap: 6px; }
+  .nav-item { padding: 6px 8px; font-size: 11px; gap: 6px; }
+  .nav-item span, .nav-item { white-space: nowrap; }
+
+  /* Topbar pills — shrink */
+  .greeting h1 { font-size: 17px; }
+  .week-pill { padding: 6px 10px; gap: 8px; }
+  .week-track { width: 70px; height: 5px; }
+  .week-pill .label { font-size: 10px; }
+  .week-pill .val { font-size: 12px; }
+  .week-stepper button { width: 22px; height: 22px; }
+  .sync-pill { padding: 5px 9px; font-size: 11px; }
+
+  /* Stat grid: single column */
+  .stat-grid { grid-template-columns: 1fr; }
+
+  /* Section head */
+  .section-head h1 { font-size: 17px; }
+  .section-head p { font-size: 11px; }
 }

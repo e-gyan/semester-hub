@@ -54,6 +54,22 @@ function save() {
 
 function uid() { return Math.random().toString(36).slice(2, 10); }
 
+/* --- Current week (auto-derived from today + startDate) ---- */
+function currentWeek() {
+  const total = state.semester.totalWeeks || 13;
+  if (!state.semester.startDate) {
+    // No start date set yet — fall back to the stored hint, default 1
+    return Math.max(1, Math.min(total, state.semester.currentWeek || 1));
+  }
+  const start = new Date(state.semester.startDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  start.setHours(0, 0, 0, 0);
+  const diffDays = Math.floor((today - start) / 86400000);
+  const w = Math.floor(diffDays / 7) + 1;
+  return Math.max(1, Math.min(total, w));
+}
+
 /* --- Grade & GPA helpers ----------------------------------- */
 function allAssignments() {
   const out = [];

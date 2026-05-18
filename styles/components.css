@@ -407,6 +407,32 @@ tr:hover td { background: var(--panel-2); }
 /* --- Assignment description preview ----------------------- */
 .asg-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
 
+/* --- H:M:S time entry ------------------------------------- */
+.time-entry {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 8px; align-items: end;
+}
+.time-entry > div { display: flex; flex-direction: column; }
+.time-entry label {
+  font-size: 10px; color: var(--muted); font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase; margin-bottom: 4px;
+}
+.time-entry input {
+  width: 100%; padding: 9px 10px; font-size: 16px; font-weight: 600;
+  text-align: center; font-variant-numeric: tabular-nums;
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 8px; color: var(--ink);
+  -moz-appearance: textfield;
+}
+.time-entry input::-webkit-outer-spin-button,
+.time-entry input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.time-entry input:focus { outline: none; border-color: var(--primary); background: var(--panel); }
+.time-entry .sep {
+  font-size: 18px; font-weight: 700; color: var(--muted);
+  padding-bottom: 8px; user-select: none;
+}
+
 /* --- Sync indicator --------------------------------------- */
 .sync-pill {
   display: inline-flex; align-items: center; gap: 8px;

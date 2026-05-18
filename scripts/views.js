@@ -40,9 +40,9 @@ function renderTopbar() {
   $('#greeting-sub').textContent = semName + ' • ' + (state.semester.startDate ? `Started ${fmtDate(state.semester.startDate)}` : 'Set a start date in Settings');
   $('#brand-name').textContent = state.semester.name ? state.semester.name.split('—')[0].trim().slice(0,18) : 'Semester Hub';
   $('#brand-sub').textContent = state.semester.userName ? state.semester.userName : 'Your studio';
-  $('#week-current').textContent = state.semester.currentWeek;
+  $('#week-current').textContent = currentWeek();
   $('#week-total').textContent = state.semester.totalWeeks;
-  $('#week-bar').style.width = (state.semester.currentWeek / state.semester.totalWeeks * 100) + '%';
+  $('#week-bar').style.width = (currentWeek() / state.semester.totalWeeks * 100) + '%';
 }
 
 function greeting() {
@@ -62,7 +62,7 @@ function renderDashboard() {
   $('#stat-courses-sub').textContent = state.courses.length === 0 ? 'Add your first one' :
     (state.courses.reduce((s,c) => s + (c.credits || 0), 0) + ' credits total');
 
-  const cw = state.semester.currentWeek;
+  const cw = currentWeek();
   const dueThisWeek = allAssignments().filter(a => weekOfDate(a.due) === cw && !a.done);
   $('#stat-due').textContent = dueThisWeek.length;
 
@@ -153,7 +153,7 @@ function renderHeatmap(selector, mini = false) {
     else if (cnt === 2) lvl = 'lvl-2';
     else if (cnt === 1) lvl = 'lvl-1';
     const cell = el('div', {
-      class: 'heatmap-cell ' + lvl + (w === state.semester.currentWeek ? ' current' : ''),
+      class: 'heatmap-cell ' + lvl + (w === currentWeek() ? ' current' : ''),
       title: `Week ${w}: ${cnt} deadline${cnt===1?'':'s'} • ${weekDateRange(w)}`,
       onclick: () => { openWeek = w; setView('week-detail'); }
     }, mini ? String(w) : (cnt > 0 ? String(cnt) : String(w)));
@@ -346,7 +346,7 @@ function renderNotesTab(body, c) {
     c.notesEntries.push({
       id: uid(),
       date: todayStr(),
-      week: state.semester.currentWeek,
+      week: currentWeek(),
       content: html,
       createdAt: Date.now()
     });
@@ -382,7 +382,7 @@ function renderNotesTab(body, c) {
     for (let i = 1; i <= state.semester.totalWeeks; i++) {
       weekSel.appendChild(el('option', { value: String(i), ...(i === n.week ? { selected: 'selected' } : {}) }, 'Week ' + i));
     }
-    weekSel.value = String(n.week || state.semester.currentWeek);
+    weekSel.value = String(n.week || currentWeek());
     dateInput.addEventListener('change', () => {
       n.date = dateInput.value;
       const w = weekOfDate(n.date);
@@ -423,7 +423,7 @@ function addNewNote(c) {
   c.notesEntries.unshift({
     id: uid(),
     date: todayStr(),
-    week: state.semester.currentWeek,
+    week: currentWeek(),
     content: '',
     createdAt: Date.now()
   });
@@ -505,8 +505,8 @@ function renderWeekly() {
   grid.innerHTML = '';
   for (let w = 1; w <= state.semester.totalWeeks; w++) {
     const data = state.weekly[w] || { tasks: [], notes: '' };
-    const isCurrent = w === state.semester.currentWeek;
-    const isPast = w < state.semester.currentWeek;
+    const isCurrent = w === currentWeek();
+    const isPast = w < currentWeek();
     const dueCount = allAssignments().filter(a => weekOfDate(a.due) === w && !a.done).length;
     const doneCount = (data.tasks || []).filter(t => t.done).length;
     const totalTasks = (data.tasks || []).length;
@@ -534,16 +534,14 @@ function renderWeekDetail() {
   body.innerHTML = '';
   if (!state.weekly[w]) state.weekly[w] = { tasks: [], notes: '' };
   const data = state.weekly[w];
-  const isCurrent = w === state.semester.currentWeek;
+  const isCurrent = w === currentWeek();
   body.appendChild(el('div', { style: 'display: flex; align-items: center; gap: 16px; margin-bottom: 18px;' },
     el('div', { class: 'course-color-square', style: 'background: ' + (isCurrent ? 'var(--primary)' : 'var(--ink-soft)') }, String(w)),
     el('div', {},
       el('h1', { style: 'margin:0;' }, 'Week ' + w),
       el('div', { style: 'color: var(--muted); font-size: 13px;' }, weekDateRange(w) || 'Set a semester start date in Settings')
     ),
-    el('div', { style: 'margin-left:auto; display:flex; gap:8px;' },
-      !isCurrent ? el('button', { class: 'btn', onclick: () => { state.semester.currentWeek = w; save(); render(); } }, 'Mark as current week') : null
-    )
+    isCurrent ? el('span', { class: 'tag info', style: 'margin-left:auto;' }, 'This week') : null
   ));
 
   const dueAsg = allAssignments().filter(a => weekOfDate(a.due) === w);

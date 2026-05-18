@@ -351,21 +351,73 @@ function buildTimeLogModal(m) {
   sourceI.appendChild(el('option', { value: '' }, '— Pick category —'));
   state.courses.forEach(c => sourceI.appendChild(el('option', { value: 'course:' + c.id }, 'Course: ' + (c.name || c.code))));
   ['Professional','Personal','Other'].forEach(c => sourceI.appendChild(el('option', { value: 'cat:' + c }, c)));
-  const hI = el('input', { type: 'number', step: '0.25', placeholder: 'Hours' });
+
+  // Three-part time entry: hours / minutes / seconds
+  const hI = el('input', { type: 'number', min: 0, max: 24, placeholder: '0' });
+  const mI = el('input', { type: 'number', min: 0, max: 59, placeholder: '0' });
+  const sI = el('input', { type: 'number', min: 0, max: 59, placeholder: '0' });
+  const preview = el('div', { style: 'font-size: 12px; color: var(--muted); margin-top: 6px; min-height: 16px; font-weight: 500;' });
+
+  function totalHours() {
+    const h = Number(hI.value) || 0;
+    const m = Number(mI.value) || 0;
+    const s = Number(sI.value) || 0;
+    return h + m/60 + s/3600;
+  }
+  function updatePreview() {
+    const t = totalHours();
+    if (t > 0) {
+      const h = Math.floor(t);
+      const mins = Math.floor((t - h) * 60);
+      const secs = Math.round(((t - h) * 60 - mins) * 60);
+      const parts = [];
+      if (h) parts.push(h + 'h');
+      if (mins) parts.push(mins + 'm');
+      if (secs) parts.push(secs + 's');
+      preview.textContent = '= ' + parts.join(' ') + '  •  ' + t.toFixed(3) + ' hours stored';
+    } else {
+      preview.textContent = '';
+    }
+  }
+  [hI, mI, sI].forEach(inp => inp.addEventListener('input', updatePreview));
+
+  const timeRow = el('div', { class: 'time-entry' },
+    el('div', {},
+      el('label', {}, 'Hours'),
+      hI
+    ),
+    el('div', { class: 'sep' }, ':'),
+    el('div', {},
+      el('label', {}, 'Minutes'),
+      mI
+    ),
+    el('div', { class: 'sep' }, ':'),
+    el('div', {},
+      el('label', {}, 'Seconds'),
+      sI
+    )
+  );
+
   const nI = el('input', { placeholder: 'What were you doing?' });
   const body = el('div', { class: 'modal-body' },
-    el('div', { class: 'field-row' }, field('Date', dI), field('Hours', hI)),
+    field('Date', dI),
+    el('div', { class: 'field' },
+      el('label', {}, 'Time spent'),
+      timeRow,
+      preview
+    ),
     field('Where the time went', sourceI),
     field('Note', nI)
   );
-  modalShell(m, 'Log hours', 'Even a rough estimate helps build the picture.', body, () => {
-    if (!hI.value || !sourceI.value) { toast('Pick a category and hours.', 'danger'); return; }
-    const log = { id: uid(), date: dI.value, hours: Number(hI.value), note: nI.value };
+  modalShell(m, 'Log hours', 'Down to the second if you want. Hours decimal is what gets stored.', body, () => {
+    const t = totalHours();
+    if (t <= 0 || !sourceI.value) { toast('Pick a category and at least some time.', 'danger'); return; }
+    const log = { id: uid(), date: dI.value, hours: Number(t.toFixed(4)), note: nI.value };
     if (sourceI.value.startsWith('course:')) log.courseId = sourceI.value.slice(7);
     else log.category = sourceI.value.slice(4);
     state.timeLogs.push(log);
     save(); closeModal(); render();
-    toast('Logged.', 'success');
+    toast('Logged ' + (preview.textContent.split('•')[0]?.replace('=', '').trim() || t.toFixed(2) + 'h') + '.', 'success');
   });
   setTimeout(() => hI.focus(), 50);
 }

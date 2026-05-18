@@ -738,6 +738,32 @@
   /* Assignment description preview */
   .asg-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
 
+  /* H:M:S time entry */
+  .time-entry {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 8px; align-items: end;
+  }
+  .time-entry > div { display: flex; flex-direction: column; }
+  .time-entry label {
+    font-size: 10px; color: var(--muted); font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase; margin-bottom: 4px;
+  }
+  .time-entry input {
+    width: 100%; padding: 9px 10px; font-size: 16px; font-weight: 600;
+    text-align: center; font-variant-numeric: tabular-nums;
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 8px; color: var(--ink);
+    -moz-appearance: textfield;
+  }
+  .time-entry input::-webkit-outer-spin-button,
+  .time-entry input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .time-entry input:focus { outline: none; border-color: var(--primary); background: var(--panel); }
+  .time-entry .sep {
+    font-size: 18px; font-weight: 700; color: var(--muted);
+    padding-bottom: 8px; user-select: none;
+  }
+
   /* Sync indicator */
   .sync-pill {
     display: inline-flex; align-items: center; gap: 8px;
@@ -1215,6 +1241,21 @@ function save() {
   scheduleCloudPush();
 }
 function uid() { return Math.random().toString(36).slice(2, 10); }
+
+/* Current week — derived from today + semester.startDate */
+function currentWeek() {
+  const total = state.semester.totalWeeks || 13;
+  if (!state.semester.startDate) {
+    return Math.max(1, Math.min(total, state.semester.currentWeek || 1));
+  }
+  const start = new Date(state.semester.startDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  start.setHours(0, 0, 0, 0);
+  const diffDays = Math.floor((today - start) / 86400000);
+  const w = Math.floor(diffDays / 7) + 1;
+  return Math.max(1, Math.min(total, w));
+}
 
 /* =====================================================
    SECURE CLOUD SYNC (JSONBin.io + Web Crypto)
@@ -1871,14 +1912,7 @@ $('#theme-switch').addEventListener('click', () => {
 /* =====================================================
    WEEK CONTROL
 ====================================================== */
-$('#week-up').addEventListener('click', () => {
-  state.semester.currentWeek = Math.min(state.semester.totalWeeks, state.semester.currentWeek + 1);
-  save(); render();
-});
-$('#week-down').addEventListener('click', () => {
-  state.semester.currentWeek = Math.max(1, state.semester.currentWeek - 1);
-  save(); render();
-});
+/* Week is auto-derived from semester.startDate + today. No manual stepper. */
 
 /* =====================================================
    RENDER (entry)
@@ -2554,9 +2588,7 @@ function renderWeekDetail() {
       el('h1', { style: 'margin:0;' }, 'Week ' + w),
       el('div', { style: 'color: var(--muted); font-size: 13px;' }, weekDateRange(w) || 'Set a semester start date in Settings')
     ),
-    el('div', { style: 'margin-left:auto; display:flex; gap:8px;' },
-      !isCurrent ? el('button', { class: 'btn', onclick: () => { state.semester.currentWeek = w; save(); render(); } }, 'Mark as current week') : null
-    )
+    isCurrent ? el('span', { class: 'tag info', style: 'margin-left:auto;' }, 'This week') : null
   ));
 
   // Deadlines this week
@@ -3489,21 +3521,61 @@ function buildTimeLogModal(m) {
   sourceI.appendChild(el('option', { value: '' }, '— Pick category —'));
   state.courses.forEach(c => sourceI.appendChild(el('option', { value: 'course:' + c.id }, 'Course: ' + (c.name || c.code))));
   ['Professional','Personal','Other'].forEach(c => sourceI.appendChild(el('option', { value: 'cat:' + c }, c)));
-  const hI = el('input', { type: 'number', step: '0.25', placeholder: 'Hours' });
+
+  const hI = el('input', { type: 'number', min: 0, max: 24, placeholder: '0' });
+  const mI = el('input', { type: 'number', min: 0, max: 59, placeholder: '0' });
+  const sI = el('input', { type: 'number', min: 0, max: 59, placeholder: '0' });
+  const preview = el('div', { style: 'font-size: 12px; color: var(--muted); margin-top: 6px; min-height: 16px; font-weight: 500;' });
+
+  function totalHours() {
+    const h = Number(hI.value) || 0;
+    const m = Number(mI.value) || 0;
+    const s = Number(sI.value) || 0;
+    return h + m/60 + s/3600;
+  }
+  function updatePreview() {
+    const t = totalHours();
+    if (t > 0) {
+      const h = Math.floor(t);
+      const mins = Math.floor((t - h) * 60);
+      const secs = Math.round(((t - h) * 60 - mins) * 60);
+      const parts = [];
+      if (h) parts.push(h + 'h');
+      if (mins) parts.push(mins + 'm');
+      if (secs) parts.push(secs + 's');
+      preview.textContent = '= ' + parts.join(' ') + '  •  ' + t.toFixed(3) + ' hours stored';
+    } else { preview.textContent = ''; }
+  }
+  [hI, mI, sI].forEach(inp => inp.addEventListener('input', updatePreview));
+
+  const timeRow = el('div', { class: 'time-entry' },
+    el('div', {}, el('label', {}, 'Hours'), hI),
+    el('div', { class: 'sep' }, ':'),
+    el('div', {}, el('label', {}, 'Minutes'), mI),
+    el('div', { class: 'sep' }, ':'),
+    el('div', {}, el('label', {}, 'Seconds'), sI)
+  );
+
   const nI = el('input', { placeholder: 'What were you doing?' });
   const body = el('div', { class: 'modal-body' },
-    el('div', { class: 'field-row' }, field('Date', dI), field('Hours', hI)),
+    field('Date', dI),
+    el('div', { class: 'field' },
+      el('label', {}, 'Time spent'),
+      timeRow,
+      preview
+    ),
     field('Where the time went', sourceI),
     field('Note', nI)
   );
-  modalShell(m, 'Log hours', 'Even a rough estimate helps build the picture.', body, () => {
-    if (!hI.value || !sourceI.value) { toast('Pick a category and hours.', 'danger'); return; }
-    const log = { id: uid(), date: dI.value, hours: Number(hI.value), note: nI.value };
+  modalShell(m, 'Log hours', 'Down to the second if you want. Hours decimal is what gets stored.', body, () => {
+    const t = totalHours();
+    if (t <= 0 || !sourceI.value) { toast('Pick a category and at least some time.', 'danger'); return; }
+    const log = { id: uid(), date: dI.value, hours: Number(t.toFixed(4)), note: nI.value };
     if (sourceI.value.startsWith('course:')) log.courseId = sourceI.value.slice(7);
     else log.category = sourceI.value.slice(4);
     state.timeLogs.push(log);
     save(); closeModal(); render();
-    toast('Logged.', 'success');
+    toast('Logged ' + (preview.textContent.split('•')[0]?.replace('=', '').trim() || t.toFixed(2) + 'h') + '.', 'success');
   });
   setTimeout(() => hI.focus(), 50);
 }

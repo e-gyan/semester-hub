@@ -49,15 +49,7 @@ $('#theme-switch').addEventListener('click', () => {
   if (currentView === 'analytics') renderCharts();
 });
 
-/* --- Week stepper ----------------------------------------- */
-$('#week-up').addEventListener('click', () => {
-  state.semester.currentWeek = Math.min(state.semester.totalWeeks, state.semester.currentWeek + 1);
-  save(); render();
-});
-$('#week-down').addEventListener('click', () => {
-  state.semester.currentWeek = Math.max(1, state.semester.currentWeek - 1);
-  save(); render();
-});
+/* Week is auto-derived from semester.startDate + today. No manual stepper. */
 
 /* --- Professional / Personal pill tabs ------------------- */
 $$('#pro-tabs .pill-tab').forEach(t => t.addEventListener('click', () => {
@@ -77,7 +69,6 @@ $('#set-save').addEventListener('click', () => {
   state.semester.startDate = $('#set-start').value;
   state.semester.totalWeeks = Math.max(1, Math.min(20, Number($('#set-weeks').value) || 13));
   state.semester.userName = $('#set-user').value.trim();
-  if (state.semester.currentWeek > state.semester.totalWeeks) state.semester.currentWeek = state.semester.totalWeeks;
   save(); toast('Saved.', 'success'); render();
 });
 

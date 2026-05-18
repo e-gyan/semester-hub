@@ -11,7 +11,7 @@
    ============================================================ */
 
 const SECURE_KEY = 'semester_hub_secure_v1';
-const PBKDF2_ITER = 150000;
+const PBKDF2_ITER = 150000;  // default for legacy per-device setup
 
 let secure = loadSecure();
 let session = { unlocked: false, masterKey: null, binId: null };
@@ -20,11 +20,44 @@ let syncDebounceTimer = null;
 let cloudInFlight = false;
 let pendingPush = false;
 
+function isEmbedded() { return !!(typeof window !== 'undefined' && window.EMBEDDED_CREDS); }
+function getIter() { return secure.iter || PBKDF2_ITER; }
+
 function loadSecure() {
-  try { return JSON.parse(localStorage.getItem(SECURE_KEY) || '{}'); }
-  catch(e) { return {}; }
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem(SECURE_KEY) || '{}'); }
+  catch(e) {}
+  // Embedded credentials take precedence over any local crypto material.
+  if (typeof window !== 'undefined' && window.EMBEDDED_CREDS) {
+    return {
+      pinSalt:    window.EMBEDDED_CREDS.pinSalt,
+      pinHash:    window.EMBEDDED_CREDS.pinHash,
+      encSalt:    window.EMBEDDED_CREDS.encSalt,
+      encrypted:  window.EMBEDDED_CREDS.encrypted,
+      iter:       window.EMBEDDED_CREDS.iter || PBKDF2_ITER,
+      lastSyncedAt:   stored.lastSyncedAt   || null,
+      failedAttempts: stored.failedAttempts || 0,
+      lockedUntil:    stored.lockedUntil    || 0,
+      _embedded: true
+    };
+  }
+  return stored;
 }
-function saveSecure() { localStorage.setItem(SECURE_KEY, JSON.stringify(secure)); }
+
+function saveSecure() {
+  if (secure._embedded) {
+    // Persist only mutable runtime state — never overwrite the embedded crypto
+    const runtime = {
+      lastSyncedAt:   secure.lastSyncedAt,
+      failedAttempts: secure.failedAttempts,
+      lockedUntil:    secure.lockedUntil
+    };
+    localStorage.setItem(SECURE_KEY, JSON.stringify(runtime));
+  } else {
+    localStorage.setItem(SECURE_KEY, JSON.stringify(secure));
+  }
+}
+
 function isCloudConfigured() { return !!(secure && secure.encrypted && secure.pinHash); }
 function isUnlocked() { return session.unlocked && !!session.masterKey && !!session.binId; }
 
@@ -110,7 +143,7 @@ async function securitySetup(pin, masterKey, binId) {
 
 async function verifyPin(pin) {
   if (!secure.pinSalt || !secure.pinHash) return false;
-  const h = await pbkdf2Bits(pin, fromB64(secure.pinSalt), PBKDF2_ITER);
+  const h = await pbkdf2Bits(pin, fromB64(secure.pinSalt), getIter());
   return bytesEq(h, fromB64(secure.pinHash));
 }
 
@@ -131,7 +164,7 @@ async function unlockWithPin(pin) {
     saveSecure();
     return false;
   }
-  const key = await deriveAesKey(pin, fromB64(secure.encSalt), PBKDF2_ITER);
+  const key = await deriveAesKey(pin, fromB64(secure.encSalt), getIter());
   try {
     const pt = await decryptString(key, secure.encrypted);
     const { masterKey, binId } = JSON.parse(pt);
@@ -146,8 +179,9 @@ async function unlockWithPin(pin) {
 }
 
 async function changeCredentials(pin, masterKey, binId) {
+  if (secure._embedded) throw new Error('Embedded credentials — re-run bake-credentials.html to change them.');
   if (!(await verifyPin(pin))) throw new Error('Wrong PIN.');
-  const key = await deriveAesKey(pin, fromB64(secure.encSalt), PBKDF2_ITER);
+  const key = await deriveAesKey(pin, fromB64(secure.encSalt), getIter());
   secure.encrypted = await encryptString(key, JSON.stringify({ masterKey, binId }));
   saveSecure();
   session.masterKey = masterKey;
@@ -155,6 +189,7 @@ async function changeCredentials(pin, masterKey, binId) {
 }
 
 async function changePinFlow(currentPin, newPin) {
+  if (secure._embedded) throw new Error('Embedded credentials — re-run bake-credentials.html to change the PIN.');
   if (!(await verifyPin(currentPin))) throw new Error('Wrong current PIN.');
   const pinSalt = randomBytes(16);
   const encSalt = randomBytes(16);
@@ -169,9 +204,17 @@ async function changePinFlow(currentPin, newPin) {
 }
 
 function resetSecurity() {
-  secure = {};
-  session = { unlocked: false, masterKey: null, binId: null };
-  saveSecure();
+  if (secure._embedded) {
+    // Sign out only — embedded crypto stays in code.
+    session = { unlocked: false, masterKey: null, binId: null };
+    secure.failedAttempts = 0;
+    secure.lockedUntil = 0;
+    saveSecure();
+  } else {
+    secure = {};
+    session = { unlocked: false, masterKey: null, binId: null };
+    saveSecure();
+  }
   setSyncStatus('idle');
 }
 

@@ -3,8 +3,44 @@
    Loaded last, after the DOM is fully parsed.
    ============================================================ */
 
+/* --- Mobile drawer menu ----------------------------------- */
+const _sidebar = $('#sidebar');
+const _menuToggle = $('#menu-toggle');
+const _menuBackdrop = $('#menu-backdrop');
+
+function openMenu() {
+  _sidebar.classList.add('is-open');
+  _menuBackdrop.classList.add('is-open');
+  _menuToggle.classList.add('is-open');
+  _menuToggle.setAttribute('aria-expanded', 'true');
+  _menuToggle.setAttribute('aria-label', 'Close menu');
+  document.body.classList.add('menu-open');
+}
+function closeMenu() {
+  _sidebar.classList.remove('is-open');
+  _menuBackdrop.classList.remove('is-open');
+  _menuToggle.classList.remove('is-open');
+  _menuToggle.setAttribute('aria-expanded', 'false');
+  _menuToggle.setAttribute('aria-label', 'Open menu');
+  document.body.classList.remove('menu-open');
+}
+function toggleMenu() {
+  if (_sidebar.classList.contains('is-open')) closeMenu(); else openMenu();
+}
+
+_menuToggle.addEventListener('click', toggleMenu);
+_menuBackdrop.addEventListener('click', closeMenu);
+// Close drawer when window grows past mobile breakpoint
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 760 && _sidebar.classList.contains('is-open')) closeMenu();
+});
+
 /* --- Navigation ------------------------------------------- */
-$$('.nav-item').forEach(n => n.addEventListener('click', () => setView(n.dataset.view)));
+$$('.nav-item').forEach(n => n.addEventListener('click', () => {
+  setView(n.dataset.view);
+  // Auto-close drawer on mobile after picking a section
+  if (window.innerWidth <= 760) closeMenu();
+}));
 
 /* --- Theme toggle ----------------------------------------- */
 $('#theme-switch').addEventListener('click', () => {
@@ -114,7 +150,10 @@ $('#modal-backdrop').addEventListener('click', (e) => {
   if (e.target === $('#modal-backdrop')) closeModal();
 });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') {
+    closeModal();
+    if (_sidebar.classList.contains('is-open')) closeMenu();
+  }
   if (e.key === 'a' && !inFormInput(e)) { e.preventDefault(); openModal('assignment'); }
   if (e.key === 'c' && !inFormInput(e)) { e.preventDefault(); openModal('course'); }
 });
@@ -147,11 +186,47 @@ function addQuick() {
   toast('Saved.', 'success');
 }
 
+/* --- Embedded-mode UI adjustments ------------------------ */
+function applyEmbeddedMode() {
+  if (!isEmbedded()) return;
+  // Hide the setup-from-scratch and change buttons — these are baked-in now
+  ['open-setup', 'change-creds', 'change-pin'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  // Re-purpose "Disconnect" as "Sign out" — clears the session only
+  const dc = document.getElementById('sync-disconnect');
+  if (dc) {
+    dc.textContent = 'Sign out';
+    dc.style.color = '';
+    dc.onclick = () => {
+      if (!confirm("Sign out? You'll need your PIN to sync again.")) return;
+      resetSecurity();
+      hideLockOverlay();
+      showLockOverlay();
+      renderSyncInfo();
+    };
+  }
+  // Replace info text in not-configured panel (which shouldn't show in embedded mode anyway)
+  const noteHost = document.getElementById('sync-configured');
+  if (noteHost && !noteHost.querySelector('.embed-note')) {
+    const note = document.createElement('div');
+    note.className = 'embed-note';
+    note.style.cssText = 'margin-top: 12px; padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; font-size: 12px; color: var(--muted);';
+    note.innerHTML = '🔐 <strong style="color: var(--ink-soft);">Embedded mode:</strong> credentials are baked into the source code, encrypted with your PIN. To change them, re-run <code>bake-credentials.html</code>.';
+    noteHost.appendChild(note);
+  }
+  // Hide the lock screen "Continue without cloud" — defeats the purpose in embedded mode
+  const skip = document.getElementById('lock-skip');
+  if (skip) skip.style.display = 'none';
+}
+
 /* --- App init -------------------------------------------- */
 async function init() {
   applyTheme();
   render();
   setSyncStatus('idle');
+  applyEmbeddedMode();
 
   const migrating = migrateLegacySync();
 

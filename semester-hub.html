@@ -412,72 +412,22 @@
     .panel-row, .panel-row-3 { grid-template-columns: 1fr; }
     .main { padding: 20px 24px 60px; }
   }
-  /* Mobile header + drawer toggle — desktop hides these */
-  .mobile-header { display: none; }
-  .menu-toggle { display: none; }
-  .menu-backdrop { display: none; }
-
-  /* Mobile / portrait tablet — drawer pattern */
+  /* Mobile / portrait tablet */
   @media (max-width: 760px) {
-    .mobile-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 14px; height: 56px;
-      background: var(--panel); border-bottom: 1px solid var(--line);
-      position: sticky; top: 0; z-index: 80;
-    }
-    .mh-brand { display: flex; align-items: center; gap: 10px; }
-    .mh-brand .brand-logo { width: 32px; height: 32px; font-size: 13px; box-shadow: 0 4px 10px rgba(109,93,252,.3); }
-    .mh-title { font-weight: 700; font-size: 15px; letter-spacing: -.01em; color: var(--ink); }
-    .menu-toggle {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 40px; height: 40px; border-radius: 10px;
-      background: var(--panel-2); border: 1px solid var(--line);
-      color: var(--ink); cursor: pointer;
-      transition: background .15s, color .15s, border-color .15s;
-    }
-    .menu-toggle:active { transform: scale(.95); }
-    .menu-toggle .ico-open { display: block; }
-    .menu-toggle .ico-close { display: none; }
-    .menu-toggle.is-open { background: var(--primary); color: white; border-color: var(--primary); }
-    .menu-toggle.is-open .ico-open { display: none; }
-    .menu-toggle.is-open .ico-close { display: block; }
-
     .app { grid-template-columns: 1fr; }
     .sidebar {
-      position: fixed; top: 0; left: 0; bottom: 0;
-      width: 84%; max-width: 320px;
-      height: 100vh; height: 100dvh;
-      z-index: 95;
-      padding: 22px 18px; gap: 16px;
-      flex-direction: column; align-items: stretch; flex-wrap: nowrap;
-      border-right: 1px solid var(--line);
-      transform: translateX(-100%);
-      transition: transform .28s cubic-bezier(.4,0,.2,1);
-      box-shadow: 0 16px 48px rgba(0,0,0,.22);
-      overflow-y: auto; overscroll-behavior: contain;
+      position: sticky; top: 0; z-index: 50;
+      height: auto; padding: 10px 12px; gap: 10px;
+      flex-direction: row; flex-wrap: wrap; align-items: center;
     }
-    .sidebar.is-open { transform: translateX(0); }
-    .nav { flex-direction: column; gap: 4px; }
-    .nav-item { padding: 11px 12px; font-size: 14px; gap: 12px; }
-    .nav-ico { width: 18px; height: 18px; }
-    .brand-sub { display: block; }
-    .brand-title { font-size: 15px; }
-    .sidebar-foot { flex-direction: column; margin-top: auto; }
-    .theme-toggle { padding: 10px 12px; font-size: 13px; gap: 12px; }
-
-    .menu-backdrop {
-      display: block;
-      position: fixed; inset: 0;
-      background: rgba(20,20,43,.55);
-      backdrop-filter: blur(3px);
-      -webkit-backdrop-filter: blur(3px);
-      z-index: 90;
-      opacity: 0; pointer-events: none;
-      transition: opacity .22s;
-    }
-    .menu-backdrop.is-open { opacity: 1; pointer-events: auto; }
-    body.menu-open { overflow: hidden; }
-
+    .brand { padding: 0; }
+    .brand-title { font-size: 14px; }
+    .brand-sub { display: none; }
+    .nav { flex-direction: row; flex-wrap: wrap; gap: 4px; flex: 1; justify-content: flex-end; }
+    .nav-item { padding: 7px 9px; font-size: 12px; }
+    .nav-ico { width: 14px; height: 14px; }
+    .sidebar-foot { margin: 0; flex-direction: row; }
+    .theme-toggle { padding: 6px 10px; font-size: 11px; gap: 8px; }
     .main { padding: 14px 14px 60px; }
     .topbar { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 16px; }
     .greeting h1 { font-size: 19px; }
@@ -523,11 +473,8 @@
   /* Small phone */
   @media (max-width: 480px) {
     .main { padding: 12px; }
-    .mobile-header { padding: 8px 12px; height: 52px; }
-    .mh-title { font-size: 14px; }
-    .menu-toggle { width: 38px; height: 38px; }
-    .sidebar { width: 88%; padding: 18px 14px; gap: 14px; }
-    .nav-item { padding: 10px 10px; font-size: 13px; }
+    .sidebar { padding: 8px 10px; gap: 6px; }
+    .nav-item { padding: 6px 8px; font-size: 11px; gap: 6px; }
     .greeting h1 { font-size: 17px; }
     .week-pill { padding: 6px 10px; gap: 8px; }
     .week-track { width: 70px; height: 5px; }
@@ -779,24 +726,9 @@
 </style>
 </head>
 <body>
-<!-- Mobile-only top header (logo + hamburger). Hidden on desktop via CSS. -->
-<header class="mobile-header" id="mobile-header">
-  <div class="mh-brand">
-    <div class="brand-logo">SH</div>
-    <span class="mh-title" id="mh-title">Semester Hub</span>
-  </div>
-  <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
-    <svg class="ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    <svg class="ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
-  </button>
-</header>
-
-<!-- Drawer backdrop (mobile only) -->
-<div class="menu-backdrop" id="menu-backdrop"></div>
-
 <div class="app">
   <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
+  <aside class="sidebar">
     <div class="brand">
       <div class="brand-logo">SH</div>
       <div>
@@ -1158,16 +1090,6 @@
 
 <script>
 /* =====================================================
-   EMBEDDED CREDENTIALS  (optional)
-   To enable PIN-only login that syncs to your JSONBin:
-     1. Open bake-credentials.html in a browser
-     2. Generate the snippet
-     3. Replace the line below with the generated `window.EMBEDDED_CREDS = { ... };`
-   Leave it as-is for per-device setup mode.
-====================================================== */
-// window.EMBEDDED_CREDS = { pinSalt: "...", pinHash: "...", encSalt: "...", encrypted: { iv: "...", ct: "..." }, iter: 250000, bakedAt: 0 };
-
-/* =====================================================
    STATE
 ====================================================== */
 const STORAGE_KEY = 'semester_hub_v1';
@@ -1223,45 +1145,20 @@ function uid() { return Math.random().toString(36).slice(2, 10); }
    - Key derived from PIN via PBKDF2 (separate salt)
 ====================================================== */
 const SECURE_KEY = 'semester_hub_secure_v1';
-const PBKDF2_ITER = 150000;  // default for legacy per-device setup
+const PBKDF2_ITER = 150000;
 
-let secure = loadSecure();
+let secure = loadSecure();    // { pinSalt, pinHash, encSalt, encrypted: {iv,ct}, lastSyncedAt, failedAttempts, lockedUntil }
 let session = { unlocked: false, masterKey: null, binId: null };
 let syncStatus = 'idle';
 let syncDebounceTimer = null;
 let cloudInFlight = false;
 let pendingPush = false;
 
-function isEmbedded() { return !!(typeof window !== 'undefined' && window.EMBEDDED_CREDS); }
-function getIter() { return secure.iter || PBKDF2_ITER; }
-
 function loadSecure() {
-  let stored = {};
-  try { stored = JSON.parse(localStorage.getItem(SECURE_KEY) || '{}'); }
-  catch(e) {}
-  if (typeof window !== 'undefined' && window.EMBEDDED_CREDS) {
-    return {
-      pinSalt:    window.EMBEDDED_CREDS.pinSalt,
-      pinHash:    window.EMBEDDED_CREDS.pinHash,
-      encSalt:    window.EMBEDDED_CREDS.encSalt,
-      encrypted:  window.EMBEDDED_CREDS.encrypted,
-      iter:       window.EMBEDDED_CREDS.iter || PBKDF2_ITER,
-      lastSyncedAt:   stored.lastSyncedAt   || null,
-      failedAttempts: stored.failedAttempts || 0,
-      lockedUntil:    stored.lockedUntil    || 0,
-      _embedded: true
-    };
-  }
-  return stored;
+  try { return JSON.parse(localStorage.getItem(SECURE_KEY) || '{}'); }
+  catch(e) { return {}; }
 }
-function saveSecure() {
-  if (secure._embedded) {
-    const runtime = { lastSyncedAt: secure.lastSyncedAt, failedAttempts: secure.failedAttempts, lockedUntil: secure.lockedUntil };
-    localStorage.setItem(SECURE_KEY, JSON.stringify(runtime));
-  } else {
-    localStorage.setItem(SECURE_KEY, JSON.stringify(secure));
-  }
-}
+function saveSecure() { localStorage.setItem(SECURE_KEY, JSON.stringify(secure)); }
 function isCloudConfigured() { return !!(secure && secure.encrypted && secure.pinHash); }
 function isUnlocked() { return session.unlocked && !!session.masterKey && !!session.binId; }
 function relTime(ts) {
@@ -1345,7 +1242,7 @@ async function securitySetup(pin, masterKey, binId) {
 }
 async function verifyPin(pin) {
   if (!secure.pinSalt || !secure.pinHash) return false;
-  const h = await pbkdf2Bits(pin, fromB64(secure.pinSalt), getIter());
+  const h = await pbkdf2Bits(pin, fromB64(secure.pinSalt), PBKDF2_ITER);
   return bytesEq(h, fromB64(secure.pinHash));
 }
 async function unlockWithPin(pin) {
@@ -1357,7 +1254,7 @@ async function unlockWithPin(pin) {
   if (!(await verifyPin(pin))) {
     secure.failedAttempts = (secure.failedAttempts || 0) + 1;
     if (secure.failedAttempts >= 5) {
-      secure.lockedUntil = Date.now() + 60 * 1000;
+      secure.lockedUntil = Date.now() + 60 * 1000; // 60s lockout
       secure.failedAttempts = 0;
       saveSecure();
       throw new Error('Too many wrong attempts. Locked for 60s.');
@@ -1365,7 +1262,7 @@ async function unlockWithPin(pin) {
     saveSecure();
     return false;
   }
-  const key = await deriveAesKey(pin, fromB64(secure.encSalt), getIter());
+  const key = await deriveAesKey(pin, fromB64(secure.encSalt), PBKDF2_ITER);
   try {
     const pt = await decryptString(key, secure.encrypted);
     const { masterKey, binId } = JSON.parse(pt);
@@ -1379,17 +1276,16 @@ async function unlockWithPin(pin) {
   }
 }
 async function changeCredentials(pin, masterKey, binId) {
-  if (secure._embedded) throw new Error('Embedded credentials — re-run bake-credentials.html to change them.');
   if (!(await verifyPin(pin))) throw new Error('Wrong PIN.');
-  const key = await deriveAesKey(pin, fromB64(secure.encSalt), getIter());
+  const key = await deriveAesKey(pin, fromB64(secure.encSalt), PBKDF2_ITER);
   secure.encrypted = await encryptString(key, JSON.stringify({ masterKey, binId }));
   saveSecure();
   session.masterKey = masterKey;
   session.binId = binId;
 }
 async function changePinFlow(currentPin, newPin) {
-  if (secure._embedded) throw new Error('Embedded credentials — re-run bake-credentials.html to change the PIN.');
   if (!(await verifyPin(currentPin))) throw new Error('Wrong current PIN.');
+  // Re-derive everything with the new PIN
   const pinSalt = randomBytes(16);
   const encSalt = randomBytes(16);
   const pinHash = await pbkdf2Bits(newPin, pinSalt, PBKDF2_ITER);
@@ -1402,16 +1298,9 @@ async function changePinFlow(currentPin, newPin) {
   saveSecure();
 }
 function resetSecurity() {
-  if (secure._embedded) {
-    session = { unlocked: false, masterKey: null, binId: null };
-    secure.failedAttempts = 0;
-    secure.lockedUntil = 0;
-    saveSecure();
-  } else {
-    secure = {};
-    session = { unlocked: false, masterKey: null, binId: null };
-    saveSecure();
-  }
+  secure = {};
+  session = { unlocked: false, masterKey: null, binId: null };
+  saveSecure();
   setSyncStatus('idle');
 }
 
@@ -1822,40 +1711,7 @@ function setView(v) {
   render();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-$$('.nav-item').forEach(n => n.addEventListener('click', () => {
-  setView(n.dataset.view);
-  if (window.innerWidth <= 760) closeMenu();
-}));
-
-/* --- Mobile drawer menu ----------------------------------- */
-const _sidebar = document.getElementById('sidebar');
-const _menuToggle = document.getElementById('menu-toggle');
-const _menuBackdrop = document.getElementById('menu-backdrop');
-
-function openMenu() {
-  _sidebar.classList.add('is-open');
-  _menuBackdrop.classList.add('is-open');
-  _menuToggle.classList.add('is-open');
-  _menuToggle.setAttribute('aria-expanded', 'true');
-  _menuToggle.setAttribute('aria-label', 'Close menu');
-  document.body.classList.add('menu-open');
-}
-function closeMenu() {
-  _sidebar.classList.remove('is-open');
-  _menuBackdrop.classList.remove('is-open');
-  _menuToggle.classList.remove('is-open');
-  _menuToggle.setAttribute('aria-expanded', 'false');
-  _menuToggle.setAttribute('aria-label', 'Open menu');
-  document.body.classList.remove('menu-open');
-}
-function toggleMenu() {
-  if (_sidebar.classList.contains('is-open')) closeMenu(); else openMenu();
-}
-_menuToggle.addEventListener('click', toggleMenu);
-_menuBackdrop.addEventListener('click', closeMenu);
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 760 && _sidebar.classList.contains('is-open')) closeMenu();
-});
+$$('.nav-item').forEach(n => n.addEventListener('click', () => setView(n.dataset.view)));
 
 /* =====================================================
    THEME
@@ -3165,10 +3021,7 @@ function openModal(kind, ctx={}) {
 function closeModal() { $('#modal-backdrop').classList.remove('open'); }
 $('#modal-backdrop').addEventListener('click', (e) => { if (e.target === $('#modal-backdrop')) closeModal(); });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    closeModal();
-    if (_sidebar && _sidebar.classList.contains('is-open')) closeMenu();
-  }
+  if (e.key === 'Escape') closeModal();
   if (e.key === 'a' && !inFormInput(e)) { e.preventDefault(); openModal('assignment'); }
   if (e.key === 'c' && !inFormInput(e)) { e.preventDefault(); openModal('course'); }
 });
@@ -3560,41 +3413,10 @@ function migrateLegacySync() {
   } catch(e) { return false; }
 }
 
-function applyEmbeddedMode() {
-  if (!isEmbedded()) return;
-  ['open-setup', 'change-creds', 'change-pin'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
-  const dc = document.getElementById('sync-disconnect');
-  if (dc) {
-    dc.textContent = 'Sign out';
-    dc.style.color = '';
-    dc.onclick = () => {
-      if (!confirm("Sign out? You'll need your PIN to sync again.")) return;
-      resetSecurity();
-      hideLockOverlay();
-      showLockOverlay();
-      renderSyncInfo();
-    };
-  }
-  const noteHost = document.getElementById('sync-configured');
-  if (noteHost && !noteHost.querySelector('.embed-note')) {
-    const note = document.createElement('div');
-    note.className = 'embed-note';
-    note.style.cssText = 'margin-top: 12px; padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; font-size: 12px; color: var(--muted);';
-    note.innerHTML = '🔐 <strong style="color: var(--ink-soft);">Embedded mode:</strong> credentials are baked into the source code, encrypted with your PIN. To change them, re-run <code>bake-credentials.html</code>.';
-    noteHost.appendChild(note);
-  }
-  const skip = document.getElementById('lock-skip');
-  if (skip) skip.style.display = 'none';
-}
-
 async function init() {
   applyTheme();
   render();
   setSyncStatus('idle');
-  applyEmbeddedMode();
 
   // Migrate any legacy plaintext sync config
   const migrating = migrateLegacySync();

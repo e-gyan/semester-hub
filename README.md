@@ -27,14 +27,17 @@ Built as a single-page web app with no build step. Open `index.html` in any mode
 ```
 semester-hub/
 ├── index.html              ← Entry point. Loads CSS + scripts.
+├── bake-credentials.html   ← Standalone tool: encrypt JSONBin creds with PIN
 ├── README.md
 ├── .gitignore
 ├── styles/
 │   ├── base.css            ← Design tokens, theme, reset, scrollbar
-│   ├── layout.css          ← App grid, sidebar, topbar, responsive
+│   ├── layout.css          ← App grid, sidebar, topbar, drawer, responsive
 │   └── components.css      ← Buttons, panels, cards, tables, modals,
 │                             overlays, rich text editor, heatmap
 └── scripts/
+    ├── embedded-credentials.js  ← (Optional) Encrypted JSONBin creds
+    │                              created by bake-credentials.html
     ├── helpers.js          ← DOM helpers, toast, date / week math,
     │                         inline editors, rich-text editor
     ├── state.js            ← Global state, persistence, GPA & grade math
@@ -49,25 +52,45 @@ Script load order matters — each file may reference globals defined earlier. T
 
 ## Cloud sync setup
 
+Two modes are supported. Pick one.
+
+### Mode A — Embedded credentials (PIN-only login on every device)
+
+Bake your JSONBin credentials into the source code, encrypted with your PIN. Every device that opens the deployed site shows the lock screen — enter the PIN once and it syncs.
+
+1. Open `bake-credentials.html` in a browser (locally or via your deployed URL).
+2. Type a PIN (10+ chars with mixed letters / numbers / symbols recommended for public repos), your JSONBin Master Key, and Bin ID.
+3. Click **Generate embedded-credentials.js**, then **Download as file** (or copy the snippet).
+4. Save it to `scripts/embedded-credentials.js` in your project.
+5. Commit and push. The deployed site now uses embedded mode — lock screen on every load, PIN unlocks the sync.
+
+To **change** the PIN or credentials later, re-run `bake-credentials.html` with the new values and replace `scripts/embedded-credentials.js`.
+
+For the **monolithic** `semester-hub.html`, paste the generated `window.EMBEDDED_CREDS = { ... };` line into the file at the marked spot near the top of the `<script>` block.
+
+### Mode B — Per-device setup
+
+Each device runs through a setup wizard at first launch.
+
 1. Sign up for a free [JSONBin.io](https://jsonbin.io/login) account and copy your Master Key.
 2. In Semester Hub: **Settings → Cloud sync → Set up cloud sync**.
-3. Choose a PIN (4+ characters), paste your Master Key, leave Bin ID empty to auto-create a new private bin.
+3. Choose a PIN, paste your Master Key, leave Bin ID empty to auto-create a new private bin.
 4. Click **Set up & connect**.
-
-On any other device, repeat steps 2–3 using the same Master Key plus the Bin ID (visible in the sync info card after first connect — click it to copy). Choose to use the cloud copy, and your data flows in.
+5. On any other device, repeat — use the same Master Key plus the Bin ID (visible in the sync info card after first connect).
 
 ### Security model
 
-- Master Key encrypted with **AES-256-GCM** before storage
-- Encryption key derived from PIN via **PBKDF2-SHA256, 150,000 iterations**, separate 128-bit salt
+- Master Key encrypted with **AES-256-GCM** before storage / before being baked into the repo
+- Encryption key derived from PIN via **PBKDF2-SHA256** with a separate 128-bit salt
+  - Per-device mode: 150,000 iterations
+  - Embedded mode: 250,000 iterations by default (adjustable up to 2,000,000 in the bake tool)
 - PIN itself hashed with PBKDF2 (separate salt) for verification — never stored in plaintext
 - 5 wrong PIN attempts → 60-second lockout
-- Sensitive operations (change credentials, change PIN, disconnect) re-prompt for PIN
 - All crypto runs in the browser via the Web Crypto API — no third-party code, no telemetry
 
-**What this protects:** Someone reading localStorage on this device (DevTools, file dump, browser sync) cannot recover your Master Key.
+**What this protects:** anyone with your source code, deployed site, or a localStorage dump sees only ciphertext. Without your PIN they cannot recover the Master Key.
 
-**What it can't protect against:** A live attacker with control of an unlocked browser. That's a limit of any client-side app.
+**What it can't protect against:** a live attacker with control of an unlocked browser, or a brute-force attempt against a weak PIN. For **public repos** in particular, choose a strong PIN — 10+ characters with mixed letter/number/symbols — because anyone can download the encrypted blob and try guesses offline. At 250k PBKDF2 iterations each guess takes ~hundreds of milliseconds, so a long passphrase makes brute force impractical.
 
 ## Deployment
 

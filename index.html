@@ -412,72 +412,22 @@
     .panel-row, .panel-row-3 { grid-template-columns: 1fr; }
     .main { padding: 20px 24px 60px; }
   }
-  /* Mobile header + drawer toggle — desktop hides these */
-  .mobile-header { display: none; }
-  .menu-toggle { display: none; }
-  .menu-backdrop { display: none; }
-
-  /* Mobile / portrait tablet — drawer pattern */
+  /* Mobile / portrait tablet */
   @media (max-width: 760px) {
-    .mobile-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 14px; height: 56px;
-      background: var(--panel); border-bottom: 1px solid var(--line);
-      position: sticky; top: 0; z-index: 80;
-    }
-    .mh-brand { display: flex; align-items: center; gap: 10px; }
-    .mh-brand .brand-logo { width: 32px; height: 32px; font-size: 13px; box-shadow: 0 4px 10px rgba(109,93,252,.3); }
-    .mh-title { font-weight: 700; font-size: 15px; letter-spacing: -.01em; color: var(--ink); }
-    .menu-toggle {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 40px; height: 40px; border-radius: 10px;
-      background: var(--panel-2); border: 1px solid var(--line);
-      color: var(--ink); cursor: pointer;
-      transition: background .15s, color .15s, border-color .15s;
-    }
-    .menu-toggle:active { transform: scale(.95); }
-    .menu-toggle .ico-open { display: block; }
-    .menu-toggle .ico-close { display: none; }
-    .menu-toggle.is-open { background: var(--primary); color: white; border-color: var(--primary); }
-    .menu-toggle.is-open .ico-open { display: none; }
-    .menu-toggle.is-open .ico-close { display: block; }
-
     .app { grid-template-columns: 1fr; }
     .sidebar {
-      position: fixed; top: 0; left: 0; bottom: 0;
-      width: 84%; max-width: 320px;
-      height: 100vh; height: 100dvh;
-      z-index: 95;
-      padding: 22px 18px; gap: 16px;
-      flex-direction: column; align-items: stretch; flex-wrap: nowrap;
-      border-right: 1px solid var(--line);
-      transform: translateX(-100%);
-      transition: transform .28s cubic-bezier(.4,0,.2,1);
-      box-shadow: 0 16px 48px rgba(0,0,0,.22);
-      overflow-y: auto; overscroll-behavior: contain;
+      position: sticky; top: 0; z-index: 50;
+      height: auto; padding: 10px 12px; gap: 10px;
+      flex-direction: row; flex-wrap: wrap; align-items: center;
     }
-    .sidebar.is-open { transform: translateX(0); }
-    .nav { flex-direction: column; gap: 4px; }
-    .nav-item { padding: 11px 12px; font-size: 14px; gap: 12px; }
-    .nav-ico { width: 18px; height: 18px; }
-    .brand-sub { display: block; }
-    .brand-title { font-size: 15px; }
-    .sidebar-foot { flex-direction: column; margin-top: auto; }
-    .theme-toggle { padding: 10px 12px; font-size: 13px; gap: 12px; }
-
-    .menu-backdrop {
-      display: block;
-      position: fixed; inset: 0;
-      background: rgba(20,20,43,.55);
-      backdrop-filter: blur(3px);
-      -webkit-backdrop-filter: blur(3px);
-      z-index: 90;
-      opacity: 0; pointer-events: none;
-      transition: opacity .22s;
-    }
-    .menu-backdrop.is-open { opacity: 1; pointer-events: auto; }
-    body.menu-open { overflow: hidden; }
-
+    .brand { padding: 0; }
+    .brand-title { font-size: 14px; }
+    .brand-sub { display: none; }
+    .nav { flex-direction: row; flex-wrap: wrap; gap: 4px; flex: 1; justify-content: flex-end; }
+    .nav-item { padding: 7px 9px; font-size: 12px; }
+    .nav-ico { width: 14px; height: 14px; }
+    .sidebar-foot { margin: 0; flex-direction: row; }
+    .theme-toggle { padding: 6px 10px; font-size: 11px; gap: 8px; }
     .main { padding: 14px 14px 60px; }
     .topbar { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 16px; }
     .greeting h1 { font-size: 19px; }
@@ -523,11 +473,8 @@
   /* Small phone */
   @media (max-width: 480px) {
     .main { padding: 12px; }
-    .mobile-header { padding: 8px 12px; height: 52px; }
-    .mh-title { font-size: 14px; }
-    .menu-toggle { width: 38px; height: 38px; }
-    .sidebar { width: 88%; padding: 18px 14px; gap: 14px; }
-    .nav-item { padding: 10px 10px; font-size: 13px; }
+    .sidebar { padding: 8px 10px; gap: 6px; }
+    .nav-item { padding: 6px 8px; font-size: 11px; gap: 6px; }
     .greeting h1 { font-size: 17px; }
     .week-pill { padding: 6px 10px; gap: 8px; }
     .week-track { width: 70px; height: 5px; }
@@ -738,32 +685,6 @@
   /* Assignment description preview */
   .asg-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
 
-  /* H:M:S time entry */
-  .time-entry {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr auto 1fr;
-    gap: 8px; align-items: end;
-  }
-  .time-entry > div { display: flex; flex-direction: column; }
-  .time-entry label {
-    font-size: 10px; color: var(--muted); font-weight: 600;
-    letter-spacing: .04em; text-transform: uppercase; margin-bottom: 4px;
-  }
-  .time-entry input {
-    width: 100%; padding: 9px 10px; font-size: 16px; font-weight: 600;
-    text-align: center; font-variant-numeric: tabular-nums;
-    background: var(--panel-2); border: 1px solid var(--line);
-    border-radius: 8px; color: var(--ink);
-    -moz-appearance: textfield;
-  }
-  .time-entry input::-webkit-outer-spin-button,
-  .time-entry input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-  .time-entry input:focus { outline: none; border-color: var(--primary); background: var(--panel); }
-  .time-entry .sep {
-    font-size: 18px; font-weight: 700; color: var(--muted);
-    padding-bottom: 8px; user-select: none;
-  }
-
   /* Sync indicator */
   .sync-pill {
     display: inline-flex; align-items: center; gap: 8px;
@@ -805,24 +726,9 @@
 </style>
 </head>
 <body>
-<!-- Mobile-only top header (logo + hamburger). Hidden on desktop via CSS. -->
-<header class="mobile-header" id="mobile-header">
-  <div class="mh-brand">
-    <div class="brand-logo">SH</div>
-    <span class="mh-title" id="mh-title">Semester Hub</span>
-  </div>
-  <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
-    <svg class="ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    <svg class="ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
-  </button>
-</header>
-
-<!-- Drawer backdrop (mobile only) -->
-<div class="menu-backdrop" id="menu-backdrop"></div>
-
 <div class="app">
   <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
+  <aside class="sidebar">
     <div class="brand">
       <div class="brand-logo">SH</div>
       <div>
@@ -861,16 +767,12 @@
           <span class="sync-dot idle" id="sync-dot"></span>
           <span id="sync-label">Local only</span>
         </div>
-        <div class="week-pill">
+        <div class="week-pill" title="Auto-calculated from today's date and your semester start date">
           <div>
             <div class="label">Week</div>
             <div class="val"><span id="week-current">3</span> / <span id="week-total">13</span></div>
           </div>
           <div class="week-track"><div id="week-bar" style="width: 23%"></div></div>
-          <div class="week-stepper">
-            <button id="week-down" title="Previous week">−</button>
-            <button id="week-up" title="Next week">+</button>
-          </div>
         </div>
       </div>
     </div>
@@ -1184,16 +1086,6 @@
 
 <script>
 /* =====================================================
-   EMBEDDED CREDENTIALS  (optional)
-   To enable PIN-only login that syncs to your JSONBin:
-     1. Open bake-credentials.html in a browser
-     2. Generate the snippet
-     3. Replace the line below with the generated `window.EMBEDDED_CREDS = { ... };`
-   Leave it as-is for per-device setup mode.
-====================================================== */
-// window.EMBEDDED_CREDS = { pinSalt: "...", pinHash: "...", encSalt: "...", encrypted: { iv: "...", ct: "..." }, iter: 250000, bakedAt: 0 };
-
-/* =====================================================
    STATE
 ====================================================== */
 const STORAGE_KEY = 'semester_hub_v1';
@@ -1242,11 +1134,11 @@ function save() {
 }
 function uid() { return Math.random().toString(36).slice(2, 10); }
 
-/* Current week — derived from today + semester.startDate */
+/* Current week — auto-derived from today + semester.startDate. No manual override. */
 function currentWeek() {
   const total = state.semester.totalWeeks || 13;
   if (!state.semester.startDate) {
-    return Math.max(1, Math.min(total, state.semester.currentWeek || 1));
+    return 1;
   }
   const start = new Date(state.semester.startDate);
   const today = new Date();
@@ -1264,45 +1156,20 @@ function currentWeek() {
    - Key derived from PIN via PBKDF2 (separate salt)
 ====================================================== */
 const SECURE_KEY = 'semester_hub_secure_v1';
-const PBKDF2_ITER = 150000;  // default for legacy per-device setup
+const PBKDF2_ITER = 150000;
 
-let secure = loadSecure();
+let secure = loadSecure();    // { pinSalt, pinHash, encSalt, encrypted: {iv,ct}, lastSyncedAt, failedAttempts, lockedUntil }
 let session = { unlocked: false, masterKey: null, binId: null };
 let syncStatus = 'idle';
 let syncDebounceTimer = null;
 let cloudInFlight = false;
 let pendingPush = false;
 
-function isEmbedded() { return !!(typeof window !== 'undefined' && window.EMBEDDED_CREDS); }
-function getIter() { return secure.iter || PBKDF2_ITER; }
-
 function loadSecure() {
-  let stored = {};
-  try { stored = JSON.parse(localStorage.getItem(SECURE_KEY) || '{}'); }
-  catch(e) {}
-  if (typeof window !== 'undefined' && window.EMBEDDED_CREDS) {
-    return {
-      pinSalt:    window.EMBEDDED_CREDS.pinSalt,
-      pinHash:    window.EMBEDDED_CREDS.pinHash,
-      encSalt:    window.EMBEDDED_CREDS.encSalt,
-      encrypted:  window.EMBEDDED_CREDS.encrypted,
-      iter:       window.EMBEDDED_CREDS.iter || PBKDF2_ITER,
-      lastSyncedAt:   stored.lastSyncedAt   || null,
-      failedAttempts: stored.failedAttempts || 0,
-      lockedUntil:    stored.lockedUntil    || 0,
-      _embedded: true
-    };
-  }
-  return stored;
+  try { return JSON.parse(localStorage.getItem(SECURE_KEY) || '{}'); }
+  catch(e) { return {}; }
 }
-function saveSecure() {
-  if (secure._embedded) {
-    const runtime = { lastSyncedAt: secure.lastSyncedAt, failedAttempts: secure.failedAttempts, lockedUntil: secure.lockedUntil };
-    localStorage.setItem(SECURE_KEY, JSON.stringify(runtime));
-  } else {
-    localStorage.setItem(SECURE_KEY, JSON.stringify(secure));
-  }
-}
+function saveSecure() { localStorage.setItem(SECURE_KEY, JSON.stringify(secure)); }
 function isCloudConfigured() { return !!(secure && secure.encrypted && secure.pinHash); }
 function isUnlocked() { return session.unlocked && !!session.masterKey && !!session.binId; }
 function relTime(ts) {
@@ -1386,7 +1253,7 @@ async function securitySetup(pin, masterKey, binId) {
 }
 async function verifyPin(pin) {
   if (!secure.pinSalt || !secure.pinHash) return false;
-  const h = await pbkdf2Bits(pin, fromB64(secure.pinSalt), getIter());
+  const h = await pbkdf2Bits(pin, fromB64(secure.pinSalt), PBKDF2_ITER);
   return bytesEq(h, fromB64(secure.pinHash));
 }
 async function unlockWithPin(pin) {
@@ -1398,7 +1265,7 @@ async function unlockWithPin(pin) {
   if (!(await verifyPin(pin))) {
     secure.failedAttempts = (secure.failedAttempts || 0) + 1;
     if (secure.failedAttempts >= 5) {
-      secure.lockedUntil = Date.now() + 60 * 1000;
+      secure.lockedUntil = Date.now() + 60 * 1000; // 60s lockout
       secure.failedAttempts = 0;
       saveSecure();
       throw new Error('Too many wrong attempts. Locked for 60s.');
@@ -1406,7 +1273,7 @@ async function unlockWithPin(pin) {
     saveSecure();
     return false;
   }
-  const key = await deriveAesKey(pin, fromB64(secure.encSalt), getIter());
+  const key = await deriveAesKey(pin, fromB64(secure.encSalt), PBKDF2_ITER);
   try {
     const pt = await decryptString(key, secure.encrypted);
     const { masterKey, binId } = JSON.parse(pt);
@@ -1420,17 +1287,16 @@ async function unlockWithPin(pin) {
   }
 }
 async function changeCredentials(pin, masterKey, binId) {
-  if (secure._embedded) throw new Error('Embedded credentials — re-run bake-credentials.html to change them.');
   if (!(await verifyPin(pin))) throw new Error('Wrong PIN.');
-  const key = await deriveAesKey(pin, fromB64(secure.encSalt), getIter());
+  const key = await deriveAesKey(pin, fromB64(secure.encSalt), PBKDF2_ITER);
   secure.encrypted = await encryptString(key, JSON.stringify({ masterKey, binId }));
   saveSecure();
   session.masterKey = masterKey;
   session.binId = binId;
 }
 async function changePinFlow(currentPin, newPin) {
-  if (secure._embedded) throw new Error('Embedded credentials — re-run bake-credentials.html to change the PIN.');
   if (!(await verifyPin(currentPin))) throw new Error('Wrong current PIN.');
+  // Re-derive everything with the new PIN
   const pinSalt = randomBytes(16);
   const encSalt = randomBytes(16);
   const pinHash = await pbkdf2Bits(newPin, pinSalt, PBKDF2_ITER);
@@ -1443,16 +1309,9 @@ async function changePinFlow(currentPin, newPin) {
   saveSecure();
 }
 function resetSecurity() {
-  if (secure._embedded) {
-    session = { unlocked: false, masterKey: null, binId: null };
-    secure.failedAttempts = 0;
-    secure.lockedUntil = 0;
-    saveSecure();
-  } else {
-    secure = {};
-    session = { unlocked: false, masterKey: null, binId: null };
-    saveSecure();
-  }
+  secure = {};
+  session = { unlocked: false, masterKey: null, binId: null };
+  saveSecure();
   setSyncStatus('idle');
 }
 
@@ -1863,40 +1722,7 @@ function setView(v) {
   render();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-$$('.nav-item').forEach(n => n.addEventListener('click', () => {
-  setView(n.dataset.view);
-  if (window.innerWidth <= 760) closeMenu();
-}));
-
-/* --- Mobile drawer menu ----------------------------------- */
-const _sidebar = document.getElementById('sidebar');
-const _menuToggle = document.getElementById('menu-toggle');
-const _menuBackdrop = document.getElementById('menu-backdrop');
-
-function openMenu() {
-  _sidebar.classList.add('is-open');
-  _menuBackdrop.classList.add('is-open');
-  _menuToggle.classList.add('is-open');
-  _menuToggle.setAttribute('aria-expanded', 'true');
-  _menuToggle.setAttribute('aria-label', 'Close menu');
-  document.body.classList.add('menu-open');
-}
-function closeMenu() {
-  _sidebar.classList.remove('is-open');
-  _menuBackdrop.classList.remove('is-open');
-  _menuToggle.classList.remove('is-open');
-  _menuToggle.setAttribute('aria-expanded', 'false');
-  _menuToggle.setAttribute('aria-label', 'Open menu');
-  document.body.classList.remove('menu-open');
-}
-function toggleMenu() {
-  if (_sidebar.classList.contains('is-open')) closeMenu(); else openMenu();
-}
-_menuToggle.addEventListener('click', toggleMenu);
-_menuBackdrop.addEventListener('click', closeMenu);
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 760 && _sidebar.classList.contains('is-open')) closeMenu();
-});
+$$('.nav-item').forEach(n => n.addEventListener('click', () => setView(n.dataset.view)));
 
 /* =====================================================
    THEME
@@ -1910,9 +1736,9 @@ $('#theme-switch').addEventListener('click', () => {
 });
 
 /* =====================================================
-   WEEK CONTROL
+   WEEK CONTROL — week is auto-derived from today + start date.
+   No manual stepper.
 ====================================================== */
-/* Week is auto-derived from semester.startDate + today. No manual stepper. */
 
 /* =====================================================
    RENDER (entry)
@@ -1937,9 +1763,9 @@ function renderTopbar() {
   $('#greeting-sub').textContent = semName + ' • ' + (state.semester.startDate ? `Started ${fmtDate(state.semester.startDate)}` : 'Set a start date in Settings');
   $('#brand-name').textContent = state.semester.name ? state.semester.name.split('—')[0].trim().slice(0,18) : 'Semester Hub';
   $('#brand-sub').textContent = state.semester.userName ? state.semester.userName : 'Your studio';
-  $('#week-current').textContent = state.semester.currentWeek;
+  $('#week-current').textContent = currentWeek();
   $('#week-total').textContent = state.semester.totalWeeks;
-  $('#week-bar').style.width = (state.semester.currentWeek / state.semester.totalWeeks * 100) + '%';
+  $('#week-bar').style.width = (currentWeek() / state.semester.totalWeeks * 100) + '%';
 }
 function greeting() {
   const h = new Date().getHours();
@@ -1962,7 +1788,7 @@ function renderDashboard() {
   $('#stat-courses-sub').textContent = state.courses.length === 0 ? 'Add your first one' :
     (state.courses.reduce((s,c) => s + (c.credits || 0), 0) + ' credits total');
 
-  const cw = state.semester.currentWeek;
+  const cw = currentWeek();
   const dueThisWeek = allAssignments().filter(a => {
     const w = weekOfDate(a.due);
     return w === cw && !a.done;
@@ -2108,7 +1934,7 @@ function renderHeatmap(selector, mini=false) {
     else if (cnt === 2) lvl = 'lvl-2';
     else if (cnt === 1) lvl = 'lvl-1';
     const cell = el('div', {
-      class: 'heatmap-cell ' + lvl + (w === state.semester.currentWeek ? ' current' : ''),
+      class: 'heatmap-cell ' + lvl + (w === currentWeek() ? ' current' : ''),
       title: `Week ${w}: ${cnt} deadline${cnt===1?'':'s'} • ${weekDateRange(w)}`,
       onclick: () => { openWeek = w; setView('week-detail'); }
     }, mini ? String(w) : (cnt > 0 ? String(cnt) : String(w)));
@@ -2308,7 +2134,7 @@ function renderNotesTab(body, c) {
     c.notesEntries.push({
       id: uid(),
       date: todayStr(),
-      week: state.semester.currentWeek,
+      week: currentWeek(),
       content: html,
       createdAt: Date.now()
     });
@@ -2351,7 +2177,7 @@ function renderNotesTab(body, c) {
     for (let i = 1; i <= state.semester.totalWeeks; i++) {
       weekSel.appendChild(el('option', { value: String(i), ...(i === n.week ? { selected: 'selected' } : {}) }, 'Week ' + i));
     }
-    weekSel.value = String(n.week || state.semester.currentWeek);
+    weekSel.value = String(n.week || currentWeek());
     weekSel.addEventListener('change', () => { n.week = Number(weekSel.value); n.weekManual = true; save(); });
     card.appendChild(el('div', { class: 'note-head' },
       el('div', { class: 'note-meta-inputs' },
@@ -2389,7 +2215,7 @@ function addNewNote(c) {
   c.notesEntries.unshift({
     id: uid(),
     date: todayStr(),
-    week: state.semester.currentWeek,
+    week: currentWeek(),
     content: '',
     createdAt: Date.now()
   });
@@ -2552,8 +2378,8 @@ function renderWeekly() {
   grid.innerHTML = '';
   for (let w = 1; w <= state.semester.totalWeeks; w++) {
     const data = state.weekly[w] || { tasks: [], notes: '' };
-    const isCurrent = w === state.semester.currentWeek;
-    const isPast = w < state.semester.currentWeek;
+    const isCurrent = w === currentWeek();
+    const isPast = w < currentWeek();
     const dueCount = allAssignments().filter(a => weekOfDate(a.due) === w && !a.done).length;
     const doneCount = (data.tasks || []).filter(t => t.done).length;
     const totalTasks = (data.tasks || []).length;
@@ -2581,7 +2407,7 @@ function renderWeekDetail() {
   body.innerHTML = '';
   if (!state.weekly[w]) state.weekly[w] = { tasks: [], notes: '' };
   const data = state.weekly[w];
-  const isCurrent = w === state.semester.currentWeek;
+  const isCurrent = w === currentWeek();
   body.appendChild(el('div', { style: 'display: flex; align-items: center; gap: 16px; margin-bottom: 18px;' },
     el('div', { class: 'course-color-square', style: 'background: ' + (isCurrent ? 'var(--primary)' : 'var(--ink-soft)') }, String(w)),
     el('div', {},
@@ -3104,7 +2930,6 @@ $('#set-save').addEventListener('click', () => {
   state.semester.startDate = $('#set-start').value;
   state.semester.totalWeeks = Math.max(1, Math.min(20, Number($('#set-weeks').value) || 13));
   state.semester.userName = $('#set-user').value.trim();
-  if (state.semester.currentWeek > state.semester.totalWeeks) state.semester.currentWeek = state.semester.totalWeeks;
   save(); toast('Saved.', 'success'); render();
 });
 $('#export-data').addEventListener('click', () => {
@@ -3197,10 +3022,7 @@ function openModal(kind, ctx={}) {
 function closeModal() { $('#modal-backdrop').classList.remove('open'); }
 $('#modal-backdrop').addEventListener('click', (e) => { if (e.target === $('#modal-backdrop')) closeModal(); });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    closeModal();
-    if (_sidebar && _sidebar.classList.contains('is-open')) closeMenu();
-  }
+  if (e.key === 'Escape') closeModal();
   if (e.key === 'a' && !inFormInput(e)) { e.preventDefault(); openModal('assignment'); }
   if (e.key === 'c' && !inFormInput(e)) { e.preventDefault(); openModal('course'); }
 });
@@ -3521,61 +3343,21 @@ function buildTimeLogModal(m) {
   sourceI.appendChild(el('option', { value: '' }, '— Pick category —'));
   state.courses.forEach(c => sourceI.appendChild(el('option', { value: 'course:' + c.id }, 'Course: ' + (c.name || c.code))));
   ['Professional','Personal','Other'].forEach(c => sourceI.appendChild(el('option', { value: 'cat:' + c }, c)));
-
-  const hI = el('input', { type: 'number', min: 0, max: 24, placeholder: '0' });
-  const mI = el('input', { type: 'number', min: 0, max: 59, placeholder: '0' });
-  const sI = el('input', { type: 'number', min: 0, max: 59, placeholder: '0' });
-  const preview = el('div', { style: 'font-size: 12px; color: var(--muted); margin-top: 6px; min-height: 16px; font-weight: 500;' });
-
-  function totalHours() {
-    const h = Number(hI.value) || 0;
-    const m = Number(mI.value) || 0;
-    const s = Number(sI.value) || 0;
-    return h + m/60 + s/3600;
-  }
-  function updatePreview() {
-    const t = totalHours();
-    if (t > 0) {
-      const h = Math.floor(t);
-      const mins = Math.floor((t - h) * 60);
-      const secs = Math.round(((t - h) * 60 - mins) * 60);
-      const parts = [];
-      if (h) parts.push(h + 'h');
-      if (mins) parts.push(mins + 'm');
-      if (secs) parts.push(secs + 's');
-      preview.textContent = '= ' + parts.join(' ') + '  •  ' + t.toFixed(3) + ' hours stored';
-    } else { preview.textContent = ''; }
-  }
-  [hI, mI, sI].forEach(inp => inp.addEventListener('input', updatePreview));
-
-  const timeRow = el('div', { class: 'time-entry' },
-    el('div', {}, el('label', {}, 'Hours'), hI),
-    el('div', { class: 'sep' }, ':'),
-    el('div', {}, el('label', {}, 'Minutes'), mI),
-    el('div', { class: 'sep' }, ':'),
-    el('div', {}, el('label', {}, 'Seconds'), sI)
-  );
-
+  const hI = el('input', { type: 'number', step: '0.25', placeholder: 'Hours' });
   const nI = el('input', { placeholder: 'What were you doing?' });
   const body = el('div', { class: 'modal-body' },
-    field('Date', dI),
-    el('div', { class: 'field' },
-      el('label', {}, 'Time spent'),
-      timeRow,
-      preview
-    ),
+    el('div', { class: 'field-row' }, field('Date', dI), field('Hours', hI)),
     field('Where the time went', sourceI),
     field('Note', nI)
   );
-  modalShell(m, 'Log hours', 'Down to the second if you want. Hours decimal is what gets stored.', body, () => {
-    const t = totalHours();
-    if (t <= 0 || !sourceI.value) { toast('Pick a category and at least some time.', 'danger'); return; }
-    const log = { id: uid(), date: dI.value, hours: Number(t.toFixed(4)), note: nI.value };
+  modalShell(m, 'Log hours', 'Even a rough estimate helps build the picture.', body, () => {
+    if (!hI.value || !sourceI.value) { toast('Pick a category and hours.', 'danger'); return; }
+    const log = { id: uid(), date: dI.value, hours: Number(hI.value), note: nI.value };
     if (sourceI.value.startsWith('course:')) log.courseId = sourceI.value.slice(7);
     else log.category = sourceI.value.slice(4);
     state.timeLogs.push(log);
     save(); closeModal(); render();
-    toast('Logged ' + (preview.textContent.split('•')[0]?.replace('=', '').trim() || t.toFixed(2) + 'h') + '.', 'success');
+    toast('Logged.', 'success');
   });
   setTimeout(() => hI.focus(), 50);
 }
@@ -3592,7 +3374,7 @@ function addQuick() {
   if (target === 'focus') {
     state.focus.push({ id: uid(), text: v, done: false, date: todayStr() });
   } else if (target === 'weekly') {
-    const w = state.semester.currentWeek;
+    const w = currentWeek();
     state.weekly[w] = state.weekly[w] || { tasks: [], notes: '' };
     state.weekly[w].tasks.push({ id: uid(), text: v, done: false });
   } else if (target === 'goal-personal') {
@@ -3632,41 +3414,10 @@ function migrateLegacySync() {
   } catch(e) { return false; }
 }
 
-function applyEmbeddedMode() {
-  if (!isEmbedded()) return;
-  ['open-setup', 'change-creds', 'change-pin'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
-  const dc = document.getElementById('sync-disconnect');
-  if (dc) {
-    dc.textContent = 'Sign out';
-    dc.style.color = '';
-    dc.onclick = () => {
-      if (!confirm("Sign out? You'll need your PIN to sync again.")) return;
-      resetSecurity();
-      hideLockOverlay();
-      showLockOverlay();
-      renderSyncInfo();
-    };
-  }
-  const noteHost = document.getElementById('sync-configured');
-  if (noteHost && !noteHost.querySelector('.embed-note')) {
-    const note = document.createElement('div');
-    note.className = 'embed-note';
-    note.style.cssText = 'margin-top: 12px; padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; font-size: 12px; color: var(--muted);';
-    note.innerHTML = '🔐 <strong style="color: var(--ink-soft);">Embedded mode:</strong> credentials are baked into the source code, encrypted with your PIN. To change them, re-run <code>bake-credentials.html</code>.';
-    noteHost.appendChild(note);
-  }
-  const skip = document.getElementById('lock-skip');
-  if (skip) skip.style.display = 'none';
-}
-
 async function init() {
   applyTheme();
   render();
   setSyncStatus('idle');
-  applyEmbeddedMode();
 
   // Migrate any legacy plaintext sync config
   const migrating = migrateLegacySync();
